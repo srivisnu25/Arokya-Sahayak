@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users collection rules
+    match /users/{userId} {
+      // Allow public read access to doctor profiles only
+      allow read: if resource.data.role == "doctor";
+      
+      // Allow users to read/write their own profile
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Additional rule for doctors reading patient profiles they have appointments with
+      allow read: if isDoctor() && hasAppointmentWithPatient(userId);
+    }
+
+    // Appointments collection rules
+    match /appointments/{appointmentId} {
+      // Patients can read their own appointments
+      // Doctors can read appointments assigned to them
+      allow read: if isPatientOwner() || isDoctorOwner();
+      
+      // Patients can create new appointments
+      allow create: if isPatient();
+      
+      // Doctors can update status/notes for existing appointments
+      allow update: if isDoctorOwner() && 
+                    request.resource.data.status in ['confirmed', 'cancelled', 'completed'] &&
+                    onlyFieldsChanged(['status', 'doctorNote', 'updatedAt']);
+      
+      // No deletes allowed - use status updates instead
+      allow delete: if false;
+    }
+
+    // Helper functions
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    function isPatient() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'patient';
+    }
+    
+    function isDoctor() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'doctor';
+    }
+    
+    function isPatientOwner() {
+      return isPatient() && 
+             resource.data.patientId == request.auth.uid;
+    }
+    
+    function isDoctorOwner() {
+      return isDoctor() && 
+             resource.data.doctorId == request.auth.uid;
+    }
+    
+    function hasAppointmentWithPatient(patientId) {
+      return exists(
+        /databases/$(database)/documents/appointments/
+        where('doctorId', '==', request.auth.uid),
+        where('patientId', '==', patientId),
+        where('status', 'in', ['confirmed', 'completed'])
+      );
+    }
+    
+    function onlyFieldsChanged(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(fields);
+    }
+  }
+}

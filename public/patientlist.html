@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Patients | AROYKYA SAHAYAK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <style>
+    .patient-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .loading-spinner {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+    }
+    .status-confirmed {
+      background-color: #D1FAE5;
+      color: #065F46;
+    }
+    .status-completed {
+      background-color: #E0E7FF;
+      color: #3730A3;
+    }
+    .mobile-menu {
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+      <div class="flex items-center justify-between w-full">
+        <a href="doctordashboard.html" class="flex items-center space-x-3">
+          <img
+            src="very new medicine.jpg"
+            class="h-12 w-12 rounded-full"
+             alt="dermastreak Logo"
+          />
+          <span class="font-extrabold text-slate-900 text-lg">AROYKYA SAHAYAK</span>
+        </a>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
+          <a href="doctordashboard.html" class="hover:text-green-600 text-green-500">Home</a>
+          <a href="about2.html" class="hover:text-green-600">About</a>
+          <a
+            href="profile.html"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >My Profile</a
+          >
+          <a
+            href="home.html"
+            class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >Log Out</a
+          >
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuButton" class="md:hidden text-gray-500 hover:text-gray-700">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Navigation (hidden by default) -->
+    <div id="mobileMenu" class="mobile-menu hidden md:hidden bg-white border-t border-gray-200 py-4 px-4 absolute w-full left-0 z-10 transform -translate-y-full opacity-0">
+      <div class="flex flex-col space-y-4">
+        <a href="doctordashboard.html" class="hover:text-green-600 text-green-500 py-2">Home</a>
+        <a href="about2.html" class="hover:text-green-600 py-2">About</a>
+        <a
+          href="profile.html"
+          class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >My Profile</a
+        >
+        <a
+          href="home.html"
+          class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >Log Out</a
+        >
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">My Patients</h1>
+        <p class="text-gray-600">View all patients with confirmed appointments</p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <input type="text" id="searchInput" placeholder="Search patients..." 
+               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+          <option value="all">All Statuses</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="text-center py-12">
+      <div class="inline-block loading-spinner text-green-600 text-4xl mb-4">
+        <i class="fas fa-spinner"></i>
+      </div>
+      <p class="text-gray-600">Loading patients...</p>
+    </div>
+
+    <!-- Patients List -->
+    <div id="patientsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Patients will be loaded here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-12">
+      <i class="fas fa-user-injured text-4xl text-gray-300 mb-4"></i>
+      <h3 class="text-xl font-medium text-gray-700 mb-2">No patients found</h3>
+      <p class="text-gray-500">You don't have any confirmed appointments yet.</p>
+    </div>
+
+    <!-- Patient Details Modal -->
+    <div id="patientModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-start mb-6">
+          <h3 class="text-xl font-bold" id="modalPatientName">Patient Details</h3>
+          <button onclick="closePatientModal()" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-medium text-gray-900 mb-3">Personal Information</h4>
+            <div class="space-y-3">
+              <p><span class="font-medium">Name:</span> <span id="patientName"></span></p>
+              <p><span class="font-medium">Email:</span> <span id="patientEmail"></span></p>
+              <p><span class="font-medium">Phone:</span> <span id="patientPhone"></span></p>
+              <p><span class="font-medium">Date of Birth:</span> <span id="patientDob"></span></p>
+              <p><span class="font-medium">Gender:</span> <span id="patientGender"></span></p>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-medium text-gray-900 mb-3">Medical Information</h4>
+            <div class="space-y-3">
+              <p><span class="font-medium">Blood Type:</span> <span id="patientBloodType"></span></p>
+              <p><span class="font-medium">Allergies:</span> <span id="patientAllergies"></span></p>
+              <p><span class="font-medium">Conditions:</span> <span id="patientConditions"></span></p>
+              <p><span class="font-medium">Medications:</span> <span id="patientMedications"></span></p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-8">
+          <h4 class="font-medium text-gray-900 mb-3">Appointment History</h4>
+          <div id="appointmentHistory" class="space-y-4">
+            <!-- Appointment history will be loaded here -->
+          </div>
+        </div>
+        
+        <div class="mt-6 pt-4 border-t border-gray-200 flex justify-end">
+          <button onclick="closePatientModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  
+    <!-- Your existing footer code -->
+      <!-- Footer -->
+    <footer
+      class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
+    >
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+        <div>
+          <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
+            <img
+              src="very new medicine.jpg"
+              class="h-full w-full object-cover"
+              alt="AROYKYA SAHAYAK Logo"
+            />
+          </div>
+          <p class="text-sm leading-relaxed">
+          AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
+            skin progress, get tips, and consult top dermatologists from the
+            comfort of your home.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="doctordashboard.html" class="hover:underline">Home</a></li>
+            <li><a href="about2.html" class="hover:underline">About Us</a></li>
+            <li>
+              <a href="services2.html" class="hover:underline">Our Services</a>
+            </li>
+            <li>
+              <a href="blog2.html" class="hover:underline">Skin Tips Blog</a>
+            </li>
+            <li><a href="contact2.html" class="hover:underline">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+          <p class="text-sm">📍 Tamil Nadu, India</p>
+          <p class="text-sm mt-2">📞 +91 98765 43210</p>
+          <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+          <ul class="space-y-2 text-sm mb-4">
+            <li>
+              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="terms.html" class="hover:underline"
+                >Terms & Conditions</a
+              >
+            </li>
+          </ul>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+      >
+        © 2025 AROYKYA SAHAYAK. All rights reserved.
+      </div>
+    </footer>
+  </footer>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+      authDomain: "dermastreak-2caae.firebaseapp.com",
+      projectId: "dermastreak-2caae",
+      storageBucket: "dermastreak-2caae.appspot.com",
+      messagingSenderId: "32726012100",
+      appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM elements
+    const patientsContainer = document.getElementById('patientsContainer');
+    const loadingElement = document.getElementById('loading');
+    const emptyStateElement = document.getElementById('emptyState');
+    const patientModal = document.getElementById('patientModal');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let currentPatientId = null;
+    let isMobileMenuOpen = false;
+
+    // Toggle mobile menu
+    function toggleMobileMenu() {
+      isMobileMenuOpen = !isMobileMenuOpen;
+      
+      if (isMobileMenuOpen) {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => {
+          mobileMenu.classList.remove('transform', '-translate-y-full', 'opacity-0');
+          mobileMenu.classList.add('translate-y-0', 'opacity-100');
+        }, 10);
+      } else {
+        mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+        mobileMenu.classList.add('-translate-y-full', 'opacity-0');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (isMobileMenuOpen && 
+          !mobileMenu.contains(e.target) && 
+          !mobileMenuButton.contains(e.target)) {
+        toggleMobileMenu();
+      }
+    });
+
+    // Format date
+    function formatDate(dateString) {
+      if (!dateString) return 'Not specified';
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+
+    // Format time
+    function formatTime(timeString) {
+      if (!timeString) return 'Not specified';
+      return timeString;
+    }
+
+    // Load patients with confirmed appointments
+    function loadPatients(searchTerm = '', statusFilter = 'all') {
+      loadingElement.classList.remove('hidden');
+      patientsContainer.innerHTML = '';
+      emptyStateElement.classList.add('hidden');
+
+      const user = auth.currentUser;
+      if (!user) return;
+
+      let query = db.collection('appointments')
+                   .where('doctorId', '==', user.uid)
+                   .where('status', 'in', ['confirmed', 'completed'])
+                   .orderBy('date', 'desc');
+
+      // Apply additional filters
+      if (statusFilter !== 'all') {
+        query = query.where('status', '==', statusFilter);
+      }
+
+      query.get().then(async (querySnapshot) => {
+        if (querySnapshot.empty) {
+          emptyStateElement.classList.remove('hidden');
+          loadingElement.classList.add('hidden');
+          return;
+        }
+
+        // Get unique patient IDs
+        const patientIds = [...new Set(querySnapshot.docs.map(doc => doc.data().patientId))];
+        
+        // Fetch patient details
+        const patientsPromises = patientIds.map(patientId => 
+          db.collection('users').doc(patientId).get()
+        );
+        
+        const patientsSnapshots = await Promise.all(patientsPromises);
+        const patients = patientsSnapshots.map(snap => ({
+          id: snap.id,
+          ...snap.data()
+        }));
+
+        // Filter by search term if provided
+        const filteredPatients = patients.filter(patient => 
+          patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          patient.email.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        if (filteredPatients.length === 0) {
+          emptyStateElement.classList.remove('hidden');
+        } else {
+          filteredPatients.forEach(patient => {
+            renderPatientCard(patient);
+          });
+        }
+
+        loadingElement.classList.add('hidden');
+      }).catch(error => {
+        console.error("Error loading patients:", error);
+        showError("Failed to load patients. Please try again.");
+        loadingElement.classList.add('hidden');
+      });
+    }
+
+    // Render patient card
+    function renderPatientCard(patient) {
+      const card = document.createElement('div');
+      card.className = 'patient-card bg-white rounded-lg shadow-sm p-6 transition-all duration-300';
+      
+      card.innerHTML = `
+        <div class="flex items-start space-x-4 mb-4">
+          <div class="flex-shrink-0">
+            <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+              <i class="fas fa-user text-xl"></i>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-semibold truncate">${patient.name || 'Anonymous Patient'}</h3>
+            <p class="text-gray-500 text-sm truncate">${patient.email || 'No email provided'}</p>
+          </div>
+        </div>
+        
+        <div class="space-y-2 text-sm text-gray-600 mb-4">
+          ${patient.phone ? `<p><i class="fas fa-phone mr-2"></i> ${patient.phone}</p>` : ''}
+          ${patient.gender ? `<p><i class="fas fa-venus-mars mr-2"></i> ${patient.gender}</p>` : ''}
+          ${patient.dob ? `<p><i class="fas fa-birthday-cake mr-2"></i> ${formatDate(patient.dob)}</p>` : ''}
+        </div>
+        
+        <div class="flex justify-between items-center">
+          <button onclick="viewPatientDetails('${patient.id}')" 
+                  class="text-sm text-green-600 hover:text-green-700 font-medium">
+            View Details
+          </button>
+          <span class="status-badge status-${patient.latestStatus || 'confirmed'}">
+            ${patient.latestStatus ? patient.latestStatus.charAt(0).toUpperCase() + patient.latestStatus.slice(1) : 'Confirmed'}
+          </span>
+        </div>
+      `;
+      
+      patientsContainer.appendChild(card);
+    }
+
+    // View patient details
+    async function viewPatientDetails(patientId) {
+      currentPatientId = patientId;
+      loadingModal(true);
+      
+      try {
+        // Get patient info
+        const patientDoc = await db.collection('users').doc(patientId).get();
+        if (!patientDoc.exists) {
+          throw new Error("Patient not found");
+        }
+        const patient = patientDoc.data();
+        
+        // Get appointment history
+        const appointmentsQuery = await db.collection('appointments')
+          .where('doctorId', '==', auth.currentUser.uid)
+          .where('patientId', '==', patientId)
+          .orderBy('date', 'desc')
+          .get();
+        
+        // Update modal content
+        document.getElementById('modalPatientName').textContent = patient.name || 'Anonymous Patient';
+        document.getElementById('patientName').textContent = patient.name || 'Not specified';
+        document.getElementById('patientEmail').textContent = patient.email || 'Not specified';
+        document.getElementById('patientPhone').textContent = patient.phone || 'Not specified';
+        document.getElementById('patientDob').textContent = formatDate(patient.dob);
+        document.getElementById('patientGender').textContent = patient.gender || 'Not specified';
+        document.getElementById('patientBloodType').textContent = patient.bloodType || 'Not specified';
+        document.getElementById('patientAllergies').textContent = patient.allergies?.join(', ') || 'None';
+        document.getElementById('patientConditions').textContent = patient.medicalConditions?.join(', ') || 'None';
+        document.getElementById('patientMedications').textContent = patient.medications?.join(', ') || 'None';
+        
+        // Render appointment history
+        const historyContainer = document.getElementById('appointmentHistory');
+        historyContainer.innerHTML = '';
+        
+        if (appointmentsQuery.empty) {
+          historyContainer.innerHTML = '<p class="text-gray-500">No appointment history found</p>';
+        } else {
+          appointmentsQuery.forEach(doc => {
+            const appointment = doc.data();
+            const appointmentElement = document.createElement('div');
+            appointmentElement.className = 'border-l-4 border-green-500 pl-4 py-2';
+            appointmentElement.innerHTML = `
+              <p class="font-medium">${formatDate(appointment.date)} at ${formatTime(appointment.time)}</p>
+              <p class="text-sm text-gray-600">Status: <span class="font-medium">${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}</span></p>
+              ${appointment.reason ? `<p class="text-sm mt-1"><span class="font-medium">Reason:</span> ${appointment.reason}</p>` : ''}
+              ${appointment.doctorNote ? `<p class="text-sm mt-1"><span class="font-medium">Notes:</span> ${appointment.doctorNote}</p>` : ''}
+            `;
+            historyContainer.appendChild(appointmentElement);
+          });
+        }
+        
+        patientModal.classList.remove('hidden');
+      } catch (error) {
+        console.error("Error loading patient details:", error);
+        showError("Failed to load patient details. Please try again.");
+      } finally {
+        loadingModal(false);
+      }
+    }
+
+    // Loading state for modal
+    function loadingModal(show) {
+      const content = patientModal.querySelector('.bg-white');
+      if (show) {
+        content.innerHTML = `
+          <div class="text-center py-8">
+            <div class="inline-block loading-spinner text-green-600 text-4xl mb-4">
+              <i class="fas fa-spinner"></i>
+            </div>
+            <p class="text-gray-600">Loading patient details...</p>
+          </div>
+        `;
+      }
+    }
+
+    // Close patient modal
+    function closePatientModal() {
+      patientModal.classList.add('hidden');
+      currentPatientId = null;
+    }
+
+    // Helper functions
+    function showError(message) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded';
+      alertDiv.innerHTML = `
+        <span class="block sm:inline">${message}</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </span>
+      `;
+      document.body.appendChild(alertDiv);
+      setTimeout(() => alertDiv.remove(), 5000);
+    }
+
+    // Logout function
+    window.logout = function() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      }).catch(error => {
+        showError("Logout failed: " + error.message);
+      });
+    };
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set up mobile menu toggle
+      mobileMenuButton.addEventListener('click', toggleMobileMenu);
+      
+      // Check auth state
+      auth.onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = 'login.html';
+        } else {
+          loadPatients();
+        }
+      });
+
+      // Set up search and filter
+      searchInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+          loadPatients(searchInput.value.trim(), statusFilter.value);
+        }
+      });
+      
+      statusFilter.addEventListener('change', () => {
+        loadPatients(searchInput.value.trim(), statusFilter.value);
+      });
+    });
+  </script>
+</body>
+</html>

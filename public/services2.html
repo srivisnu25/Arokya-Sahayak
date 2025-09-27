@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Our Services | AROKYA SAHAYAK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .service-card:hover {
+        transform: scale(1.03);
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      /* Mobile menu styles */
+      .mobile-menu {
+        display: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      .mobile-menu.active {
+        display: block;
+        max-height: 500px;
+      }
+      .mobile-menu-button {
+        transition: transform 0.3s ease;
+      }
+      .mobile-menu-button.active {
+        transform: rotate(90deg);
+      }
+       .btn-scale { 
+        transition: transform 0.3s ease; 
+        display: inline-block; 
+      }
+      .btn-scale:hover, .btn-scale:focus { 
+        transform: scale(1.05); 
+        outline: none; 
+      }
+    </style>
+  </head>
+
+  <body class="bg-[#f3f9ff] text-slate-900">
+    <header class="bg-white shadow">
+      <nav
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16"
+      >
+        <a href="doctordashboard.html" class="flex items-center space-x-3">
+          <img
+            src="very new medicine.jpg"
+            class="h-12 w-12 rounded-full"
+            alt="AROKYA SAHAYAK Logo"
+          />
+          <span class="font-extrabold text-slate-900 text-lg">AROKYA SAHAYAK</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
+          <a href="doctordashboard.html" class="hover:text-green-600">Home</a>
+          <a href="about2.html" class="hover:text-green-600">About</a>
+          <a href="services2.html" class="text-green-500 font-semibold">Services</a>
+          <a
+            href="profile.html"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
+            >My Profile</a
+          >
+          <button
+            id="logoutBtnDesktop"
+            class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
+            >Log Out</button
+          >
+        </div>
+        <div class="flex md:hidden">
+            <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+      </nav>
+       <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
+        <a href="doctordashboard.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
+        <a href="about2.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+        <a href="services2.html" class="block py-3 text-green-500 font-semibold border-b border-gray-100">Services</a>
+        <div class="mt-4 space-y-3">
+          <a href="profile.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
+          <button id="logoutBtnMobile" class="block w-full text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-4xl font-extrabold text-center text-[#0a1e3a] mb-6">
+        Our Services
+      </h1>
+      <p class="text-center text-slate-600 mb-12 max-w-3xl mx-auto">
+        At AROKYA SAHAYAK, we offer AI-powered skin tracking solutions designed to
+        help you monitor and improve your skin health conveniently from home.
+        Explore our key services below.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-sm service-card text-center">
+          <i class="fas fa-camera-retro text-green-600 text-4xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">Daily Skin Tracking</h3>
+          <p class="text-slate-600 mb-4">
+            Easily upload your skin images daily to monitor progress, spot
+            issues early, and stay consistent in your skincare routine.
+          </p>
+          <img
+            src="https://t3.ftcdn.net/jpg/04/22/50/10/360_F_422501065_iKBL7qoOhaXqjxONodvSnGmuuwkt7pbf.jpg"
+            class="w-full h-48 object-cover rounded-lg"
+            alt="Daily Skin Tracking"
+          />
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm service-card text-center">
+          <i class="fas fa-chart-line text-green-600 text-4xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">AI Progress Reports</h3>
+          <p class="text-slate-600 mb-4">
+            Receive automated AI reports with graphs, timelines, and
+            recommendations based on your skin’s visual progress.
+          </p>
+          <img
+            src="https://india.wildoak.store/cdn/shop/articles/Ai-Skin-Blog-Landscape_67f02c04-0302-466a-ace0-876b9d0aca44.webp?v=1741325531"
+            class="w-full h-48 object-cover rounded-lg"
+            alt="AI Progress Reports"
+          />
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm service-card text-center">
+          <i class="fas fa-user-md text-green-600 text-4xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">Experts Consultation</h3>
+          <p class="text-slate-600 mb-4">
+            Book personalized consultations with certified dermatologists
+            directly through the platform, with your progress data ready.
+          </p>
+          <img
+            src="https://www.aaynaclinic.com/wp-content/uploads/2023/01/rejuvenating-facial-treatment-min-scaled.webp"
+            class="w-full h-48 object-cover rounded-lg"
+            alt="Dermatologist Consultation"
+          />
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
+    >
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+        <div>
+          <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
+            <img
+              src="very new medicine.jpg"
+              class="h-full w-full object-cover"
+              alt="AROKYA SAHAYAK Logo"
+            />
+          </div>
+          <p class="text-sm leading-relaxed">
+            AROKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
+            skin progress, get tips, and consult top dermatologists from the
+            comfort of your home.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="doctordashboard.html" class="hover:underline">Home</a></li>
+            <li><a href="about2.html" class="hover:underline">About Us</a></li>
+            <li>
+              <a href="services2.html" class="hover:underline">Our Services</a>
+            </li>
+            <li>
+              <a href="blog2.html" class="hover:underline">Skin Tips Blog</a>
+            </li>
+            <li><a href="contact2.html" class="hover:underline">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+          <p class="text-sm">📍 Tamil Nadu, India</p>
+          <p class="text-sm mt-2">📞 +91 98765 43210</p>
+          <p class="text-sm mt-2">✉️ support@AROKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+        </div>
+
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+          <ul class="space-y-2 text-sm mb-4">
+            <li>
+              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="terms.html" class="hover:underline"
+                >Terms & Conditions</a
+              >
+            </li>
+          </ul>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+      >
+        © 2025 AROKYA SAHAYAK. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const mobileMenuButton = document.querySelector('.mobile-menu-button');
+          const mobileMenu = document.querySelector('.mobile-menu');
+          
+          if(mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', function() {
+              mobileMenu.classList.toggle('active');
+              mobileMenuButton.classList.toggle('active');
+              
+              const icon = mobileMenuButton.querySelector('svg');
+              if (mobileMenu.classList.contains('active')) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+              } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+              }
+            });
+          }
+        });
+    </script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  
+        const firebaseConfig = {
+          apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+          authDomain: "dermastreak-2caae.firebaseapp.com",
+          projectId: "dermastreak-2caae",
+          storageBucket: "dermastreak-2caae.appspot.com",
+          messagingSenderId: "32726012100",
+          appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+        };
+  
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Auth state listener
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // If no user is logged in, redirect to the login page
+                console.log("No user logged in, redirecting...");
+                window.location.href = 'login.html';
+            }
+        });
+  
+        const handleLogout = async () => {
+          try {
+            await signOut(auth);
+            window.location.href = 'home.html';
+          } catch (error) {
+            console.error('Error signing out:', error);
+          }
+        };
+  
+        document.getElementById('logoutBtnDesktop')?.addEventListener('click', handleLogout);
+        document.getElementById('logoutBtnMobile')?.addEventListener('click', handleLogout);
+    </script>
+  </body>
+</html>

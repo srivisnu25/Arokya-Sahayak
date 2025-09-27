@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Doctors | AROYKYA SAHAYAK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <style>
+    .doctor-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .loading-spinner {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    #bookingModal {
+      transition: all 0.3s ease;
+    }
+    
+    /* Mobile menu styles */
+    .mobile-menu {
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    .mobile-menu.active {
+      display: block;
+      max-height: 500px;
+    }
+    .mobile-menu-button {
+      transition: transform 0.3s ease;
+    }
+    .mobile-menu-button.active {
+      transform: rotate(90deg);
+    }
+    .btn-scale {
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+    .btn-scale:hover,
+    .btn-scale:focus {
+      transform: scale(1.05);
+      outline: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center justify-between w-full">
+        <a href="patient.html" class="flex items-center space-x-3">
+          <img src="very new medicine.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROYKYA SAHAYAK Logo">
+          <span class="font-extrabold text-slate-900 text-base md:text-lg">AROYKYA SAHAYAK</span>
+        </a>
+        
+        <!-- Mobile menu button -->
+        <div class="flex md:hidden">
+          <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
+          <a href="patient.html" class="hover:text-green-600 text-green-500">Home</a>
+          <a href="about1.html" class="hover:text-green-600">About</a>
+          <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500">My Profile</a>
+          <a href="#" onclick="logout()" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Log Out</a>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Mobile menu -->
+    <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
+      <a href="patient.html" class="block py-3 text-green-500 border-b border-gray-100">Home</a>
+      <a href="about1.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+      <div class="mt-4 space-y-3">
+        <a href="profile.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
+        <a href="#" onclick="logout()" class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Our Dermatology Specialists</h1>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">Meet our team of board-certified dermatologists</p>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="mb-8 bg-white p-6 rounded-xl shadow-sm">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <input type="text" id="searchInput" placeholder="Search by name or specialization..." 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        </div>
+        <div class="w-full md:w-64">
+          <select id="specializationFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            <option value="">All Specializations</option>
+            <option value="Acne">Acne</option>
+            <option value="Eczema">Eczema</option>
+            <option value="Psoriasis">Psoriasis</option>
+            <option value="Skin Cancer">Skin Cancer</option>
+            <option value="Cosmetic">Cosmetic Dermatology</option>
+          </select>
+        </div>
+        <button onclick="filterDoctors()" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="text-center py-12">
+      <div class="inline-block loading-spinner text-green-600 text-4xl mb-4">
+        <i class="fas fa-spinner"></i>
+      </div>
+      <p class="text-gray-600">Loading doctors...</p>
+    </div>
+
+    <!-- Doctors List -->
+    <div id="doctorsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Doctors will be loaded here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-12">
+      <i class="fas fa-user-md text-4xl text-gray-300 mb-4"></i>
+      <h3 class="text-xl font-medium text-gray-700 mb-2">No doctors found</h3>
+      <p class="text-gray-500">Try adjusting your search filters</p>
+    </div>
+  </main>
+
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full">
+      <h3 class="text-xl font-bold mb-4">Book Appointment</h3>
+      <form id="bookingForm" class="space-y-4">
+        <input type="hidden" id="doctorId">
+        <input type="hidden" id="doctorName">
+        
+        <div>
+          <label class="block text-sm font-medium mb-1">Date</label>
+          <input type="date" id="appointmentDate" required min="" 
+                 class="w-full border rounded-lg px-4 py-2">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-1">Time</label>
+          <select id="appointmentTime" required class="w-full border rounded-lg px-4 py-2">
+            <option value="">Select time</option>
+            <option>09:00 AM</option>
+            <option>10:00 AM</option>
+            <option>11:00 AM</option>
+            <option>12:00 PM</option>
+            <option>02:00 PM</option>
+            <option>03:00 PM</option>
+            <option>04:00 PM</option>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-1">Reason for Visit</label>
+          <textarea id="appointmentReason" rows="3" required
+                    class="w-full border rounded-lg px-4 py-2" placeholder="Describe your symptoms or concerns"></textarea>
+        </div>
+        
+        <div class="flex justify-end space-x-3">
+          <button type="button" onclick="closeModal()" 
+                  class="px-4 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
+          <button type="submit" id="submitBooking"
+                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+            Send Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+      <div>
+        <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
+          <img src="very new medicine.jpg" class="h-full w-full object-cover" alt="AROYKYA SAHAYAK Logo">
+        </div>
+        <p class="text-sm leading-relaxed">
+          AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
+          skin progress, get tips, and consult top dermatologists from the
+          comfort of your home.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="patient.html" class="hover:underline">Home</a></li>
+          <li><a href="about1.html" class="hover:underline">About Us</a></li>
+          <li>
+            <a href="services1.html" class="hover:underline">Our Services</a>
+          </li>
+          <li>
+            <a href="blog1.html" class="hover:underline">Skin Tips Blog</a>
+          </li>
+          <li><a href="contact1.html" class="hover:underline">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+        <p class="text-sm">📍 Tamil Nadu, India</p>
+        <p class="text-sm mt-2">📞 +91 98765 43210</p>
+        <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
+        <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+      </div>
+      <div>
+        <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+        <ul class="space-y-2 text-sm mb-4">
+          <li>
+            <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+          </li>
+          <li>
+            <a href="terms.html" class="hover:underline">Terms & Conditions</a>
+          </li>
+        </ul>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="hover:text-white"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6">
+      © 2025 AROYKYA SAHAYAK. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+      authDomain: "dermastreak-2caae.firebaseapp.com",
+      projectId: "dermastreak-2caae",
+      storageBucket: "dermastreak-2caae.appspot.com",
+      messagingSenderId: "32726012100",
+      appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM elements
+    const doctorsContainer = document.getElementById('doctorsContainer');
+    const loadingElement = document.getElementById('loading');
+    const emptyStateElement = document.getElementById('emptyState');
+    const bookingModal = document.getElementById('bookingModal');
+    let selectedDoctor = null;
+
+    // Set minimum date for appointment (today)
+    document.getElementById('appointmentDate').min = new Date().toISOString().split('T')[0];
+
+    // Fetch and display doctors
+    async function loadDoctors(searchTerm = '', specialization = '') {
+      try {
+        loadingElement.classList.remove('hidden');
+        doctorsContainer.innerHTML = '';
+        emptyStateElement.classList.add('hidden');
+
+        let doctorsQuery = db.collection('users').where('role', '==', 'doctor');
+
+        if (searchTerm) {
+          doctorsQuery = doctorsQuery.where('name', '>=', searchTerm)
+                                   .where('name', '<=', searchTerm + '\uf8ff');
+        }
+
+        if (specialization) {
+          doctorsQuery = doctorsQuery.where('specialization', '==', specialization);
+        }
+
+        const querySnapshot = await doctorsQuery.get();
+
+        if (querySnapshot.empty) {
+          emptyStateElement.classList.remove('hidden');
+          return;
+        }
+
+        querySnapshot.forEach(doc => {
+          const doctor = doc.data();
+          renderDoctorCard(doctor, doc.id);
+        });
+
+      } catch (error) {
+        console.error("Error loading doctors:", error);
+        showError("Failed to load doctors. Please try again.");
+      } finally {
+        loadingElement.classList.add('hidden');
+      }
+    }
+
+    // Render doctor card
+    function renderDoctorCard(doctor, doctorId) {
+      const card = document.createElement('div');
+      card.className = 'doctor-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg p-6';
+      
+      card.innerHTML = `
+        <div class="mb-4">
+          <h3 class="text-xl font-bold text-gray-900">Dr. ${doctor.name}</h3>
+          <p class="text-green-600 font-medium">${doctor.specialization || 'Dermatologist'}</p>
+        </div>
+        
+        <div class="space-y-3 text-gray-600">
+          ${doctor.qualifications ? `<p><i class="fas fa-graduation-cap text-green-500 mr-2"></i> ${doctor.qualifications}</p>` : ''}
+          ${doctor.experience ? `<p><i class="fas fa-briefcase text-green-500 mr-2"></i> ${doctor.experience} years experience</p>` : ''}
+          ${doctor.languagesSpoken ? `<p><i class="fas fa-language text-green-500 mr-2"></i> ${Array.isArray(doctor.languagesSpoken) ? doctor.languagesSpoken.join(', ') : doctor.languagesSpoken}</p>` : ''}
+          ${doctor.clinics ? `<p><i class="fas fa-hospital text-green-500 mr-2"></i> ${Array.isArray(doctor.clinics) ? doctor.clinics.join(', ') : doctor.clinics}</p>` : ''}
+        </div>
+        
+        <div class="mt-6 pt-4 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
+          <button onclick="openBookingModal('${doctorId}', '${doctor.name}')" 
+                  class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+            Book Appointment
+          </button>
+          <button onclick="openChat('${doctorId}')" 
+                  class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+            Chat
+          </button>
+           <button onclick="openVideoCall('${doctorId}')" 
+                  class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+          video call
+          </button>
+        </div>
+      `;
+      
+      doctorsContainer.appendChild(card);
+    }
+
+    // Modal functions
+    function openBookingModal(doctorId, doctorName) {
+      selectedDoctor = { id: doctorId, name: doctorName };
+      document.getElementById('doctorId').value = doctorId;
+      document.getElementById('doctorName').value = doctorName;
+      bookingModal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      bookingModal.classList.add('hidden');
+      document.getElementById('bookingForm').reset();
+    }
+
+    // Handle booking form submission
+    document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitBooking');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("Please login to book appointments");
+
+        const bookingData = {
+          doctorId: selectedDoctor.id,
+          doctorName: selectedDoctor.name,
+          patientId: user.uid,
+          patientName: user.displayName || "Anonymous Patient",
+          date: document.getElementById('appointmentDate').value,
+          time: document.getElementById('appointmentTime').value,
+          reason: document.getElementById('appointmentReason').value,
+          status: "pending",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        // Add to appointments collection
+        await db.collection('appointments').add(bookingData);
+        
+        closeModal();
+        showSuccess(`Request sent to Dr. ${selectedDoctor.name}! They'll respond soon.`);
+        
+      } catch (error) {
+        console.error("Booking error:", error);
+        showError("Booking failed: " + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Request';
+      }
+    });
+
+    // Filter doctors
+    function filterDoctors() {
+      const searchTerm = document.getElementById('searchInput').value.trim();
+      const specialization = document.getElementById('specializationFilter').value;
+      loadDoctors(searchTerm, specialization);
+    }
+
+    // Helper functions
+    function showError(message) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded';
+      alertDiv.innerHTML = `
+        <span class="block sm:inline">${message}</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </span>
+      `;
+      document.body.appendChild(alertDiv);
+      setTimeout(() => alertDiv.remove(), 5000);
+    }
+
+    function showSuccess(message) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded';
+      alertDiv.innerHTML = `
+        <span class="block sm:inline">${message}</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </span>
+      `;
+      document.body.appendChild(alertDiv);
+      setTimeout(() => alertDiv.remove(), 5000);
+    }
+
+    // Logout function
+    window.logout = function() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      }).catch(error => {
+        showError("Logout failed: " + error.message);
+      });
+    };
+
+    // Open chat with doctor
+    function openChat(recipientId) {
+      window.location.href = `chat.html?recipient=${recipientId}`;
+    }
+    function openVideoCall(recipientId) {
+      window.location.href = `videocall.html?recipient=${recipientId}`;
+    }
+
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.querySelector('.mobile-menu-button');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        mobileMenuButton.classList.toggle('active');
+        
+        // Change icon when menu is open/closed
+        const icon = mobileMenuButton.querySelector('svg');
+        if (mobileMenu.classList.contains('active')) {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+        } else {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        }
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const isClickInsideMenu = mobileMenu.contains(event.target);
+        const isClickOnButton = mobileMenuButton.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnButton && mobileMenu.classList.contains('active')) {
+          mobileMenu.classList.remove('active');
+          mobileMenuButton.classList.remove('active');
+          const icon = mobileMenuButton.querySelector('svg');
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        }
+      });
+
+      // Check auth state
+      auth.onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = 'login.html';
+        } else {
+          loadDoctors();
+        }
+      });
+
+      // Add search input event listener
+      document.getElementById('searchInput').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+          filterDoctors();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

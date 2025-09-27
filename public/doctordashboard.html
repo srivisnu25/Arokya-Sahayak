@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Doctor Dashboard | AROYKYA SAHAYAK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .dashboard-card:hover {
+        transform: scale(1.03);
+        transition: transform 0.3s;
+      }
+      
+      /* Mobile menu styles */
+      .mobile-menu {
+        display: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      .mobile-menu.active {
+        display: block;
+        max-height: 500px;
+      }
+      .mobile-menu-button {
+        transition: transform 0.3s ease;
+      }
+      .mobile-menu-button.active {
+        transform: rotate(90deg);
+      }
+      .btn-scale {
+        transition: transform 0.3s ease;
+        display: inline-block;
+      }
+      .btn-scale:hover,
+      .btn-scale:focus {
+        transform: scale(1.05);
+        outline: none;
+      }
+    </style>
+  </head>
+
+  <body class="bg-[#f3f9ff] text-slate-900">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+        <div class="flex items-center justify-between w-full">
+          <a href="doctordashboard.html" class="flex items-center space-x-3">
+            <img
+              src="very new medicine.jpg"
+              class="h-10 w-10 md:h-12 md:w-12 rounded-full"
+              alt="AROYKYA SAHAYAK Logo"
+            />
+            <span class="font-extrabold text-slate-900 text-base md:text-lg">AROYKYA SAHAYAK</span>
+          </a>
+          
+          <!-- Mobile menu button -->
+          <div class="flex md:hidden">
+            <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
+            <a href="doctordashboard.html" class="hover:text-green-600 text-green-500">Home</a>
+            <a href="about2.html" class="hover:text-green-600">About</a>
+            <a
+              href="profile.html"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >My Profile</a
+            >
+            <a
+              href="home.html"
+              class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >Log Out</a
+            >
+          </div>
+        </div>
+      </nav>
+      
+      <!-- Mobile menu -->
+      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
+        <a href="doctordashboard.html" class="block py-3 text-green-500 border-b border-gray-100">Home</a>
+        <a href="about2.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+        <div class="mt-4 space-y-3">
+          <a
+            href="profile.html"
+            class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
+            >My Profile</a
+          >
+          <a
+            href="home.html"
+            class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
+            >Log Out</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Main -->
+    <main class="max-w-7xl mx-auto px-4 py-8 md:py-12 space-y-10">
+      <!-- Welcome Section -->
+      <div
+        class="bg-white p-6 md:p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between"
+      >
+        <div class="space-y-3 text-center md:text-left mb-6 md:mb-0">
+          <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">
+            Welcome, Dr. <span id="welcome" class="text-green-600"></span> 👋
+          </h1>
+          <p class="text-slate-600">
+            Stay organized and manage patient cases, appointments, and
+            prescriptions all in one place.
+          </p>
+        </div>
+        <img
+          src="medicine.png"
+          class="w-28 md:w-36"
+          alt="Doctor Dashboard Illustration"
+        />
+      </div>
+
+      <!-- Doctor Dashboard Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <!-- Patient Cases -->
+        <div
+          class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl text-center space-y-4"
+        >
+          <i class="fas fa-user-injured text-green-600 text-4xl"></i>
+          <h3 class="font-bold text-xl">Patient Cases</h3>
+          <p class="text-slate-600 text-sm">
+            Review, assign and manage your current patient cases.
+          </p>
+          <a
+            href="patientlist.html"
+            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            >View Cases</a
+          >
+        </div>
+
+        <!-- Chat Center -->
+        <div
+          class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl text-center space-y-4"
+        >
+          <i class="fas fa-comments text-green-600 text-4xl"></i>
+          <h3 class="font-bold text-xl">Chat Center</h3>
+          <p class="text-slate-600 text-sm">
+            Communicate with patients in real-time with secure messaging.
+          </p>
+          <a
+            href="chat.html"
+            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            >Open Chat</a
+          >
+        </div>
+
+        <!-- Appointments -->
+        <div
+          class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl text-center space-y-4"
+        >
+          <i class="fas fa-calendar-check text-green-600 text-4xl"></i>
+          <h3 class="font-bold text-xl">Appointments</h3>
+          <p class="text-slate-600 text-sm">
+            Schedule or reschedule upcoming consultations.
+          </p>
+          <a
+            href="appointment.html"
+            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            >Manage</a
+          >
+        </div>
+
+        <!-- Prescriptions -->
+        <div
+          class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl text-center space-y-4"
+        >
+          <i class="fas fa-pills text-green-600 text-4xl"></i>
+          <h3 class="font-bold text-xl">Prescriptions</h3>
+          <p class="text-slate-600 text-sm">
+            View, send, and manage prescriptions for your patients.
+          </p>
+          <a
+            href="#"
+            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            >Go to Rx</a
+          >
+        </div>
+
+        <!-- Patient Progress -->
+        <div
+          class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl text-center space-y-4"
+        >
+          <i class="fas fa-chart-bar text-green-600 text-4xl"></i>
+          <h3 class="font-bold text-xl">Patient Progress</h3>
+          <p class="text-slate-600 text-sm">
+            Track patient improvement and clinical notes over time.
+          </p>
+          <a
+            href="#"
+            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            >Track Now</a
+          >
+        </div>
+
+        <!-- Analytics -->
+        <div
+          class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl text-center space-y-4"
+        >
+          <i class="fas fa-file-medical-alt text-green-600 text-4xl"></i>
+          <h3 class="font-bold text-xl">Analytics</h3>
+          <p class="text-slate-600 text-sm">
+            Review reports, success metrics, and consultation trends.
+          </p>
+          <a
+            href="#"
+            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            >View Stats</a
+          >
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
+    >
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+        <div>
+          <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
+            <img
+              src="very new medicine.jpg"
+              class="h-full w-full object-cover"
+              alt="AROYKYA SAHAYAK Logo"
+            />
+          </div>
+          <p class="text-sm leading-relaxed">
+          AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
+            skin progress, get tips, and consult top dermatologists from the
+            comfort of your home.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="doctordashboard.html" class="hover:underline">Home</a></li>
+            <li><a href="about2.html" class="hover:underline">About Us</a></li>
+            <li>
+              <a href="services2.html" class="hover:underline">Our Services</a>
+            </li>
+            <li>
+              <a href="blog2.html" class="hover:underline">Skin Tips Blog</a>
+            </li>
+            <li><a href="contact2.html" class="hover:underline">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+          <p class="text-sm">📍 Tamil Nadu, India</p>
+          <p class="text-sm mt-2">📞 +91 98765 43210</p>
+          <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+          <ul class="space-y-2 text-sm mb-4">
+            <li>
+              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="terms.html" class="hover:underline"
+                >Terms & Conditions</a
+              >
+            </li>
+          </ul>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+      >
+        © 2025 AROYKYA SAHAYAK. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- Username Script -->
+    <script>
+      const username = sessionStorage.getItem("username");
+      document.getElementById("welcome").innerText = username || "User";
+    </script>
+
+    <!-- Mobile menu toggle functionality -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.querySelector('.mobile-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('active');
+          mobileMenuButton.classList.toggle('active');
+          
+          // Change icon when menu is open/closed
+          const icon = mobileMenuButton.querySelector('svg');
+          if (mobileMenu.classList.contains('active')) {
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+          } else {
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+          }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+          const isClickInsideMenu = mobileMenu.contains(event.target);
+          const isClickOnButton = mobileMenuButton.contains(event.target);
+          
+          if (!isClickInsideMenu && !isClickOnButton && mobileMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+            mobileMenuButton.classList.remove('active');
+            const icon = mobileMenuButton.querySelector('svg');
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+          }
+        });
+      });
+    </script>
+
+    <!-- Firebase Logout Script -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+      import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+        authDomain: "dermastreak-2caae.firebaseapp.com",
+        projectId: "dermastreak-2caae",
+        storageBucket: "dermastreak-2caae.appspot.com",
+        messagingSenderId: "32726012100",
+        appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      
+      function displayUsername() {
+        const welcomeEl = document.getElementById("welcome");
+        if (!welcomeEl) return;
+
+        // Check for username in this order:
+        // 1. URL parameters (immediate redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlName = urlParams.get('name');
+        
+        // 2. sessionStorage (from login/registration)
+        const sessionName = sessionStorage.getItem('username');
+        
+        // 3. localStorage (persistent storage)
+        const localName = localStorage.getItem('username');
+        
+        // 4. Firebase Auth (if page refreshed)
+        const authName = auth.currentUser?.displayName;
+
+        welcomeEl.textContent = urlName || sessionName || localName || authName || "User";
+      }
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          displayUsername();
+        } else {
+          window.location.href = "login.html";
+        }
+      });
+
+      window.logout = async function() {
+        try {
+          await signOut(auth);
+          sessionStorage.clear();
+          window.location.href = "home.html";
+        } catch (error) {
+          console.error("Logout failed:", error);
+        }
+      };
+    </script>
+  </body>
+</html>

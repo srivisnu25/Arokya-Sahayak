@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Call | AROYKYA SAHAYAK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <style>
+        /* Ensure the video fills the container and the local video is an overlay */
+        #remoteVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #localVideo {
+            width: 25%;
+            max-width: 200px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            border-radius: 0.5rem;
+            border: 2px solid white;
+        }
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: background-color 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col h-screen">
+
+    <header class="bg-gray-800 shadow sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+            <div class="flex items-center space-x-3">
+                <img src="very new medicine.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROYKYA SAHAYAK Logo">
+                <span class="font-extrabold text-lg">AROYKYA SAHAYAK</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-1 relative flex items-center justify-center">
+        <video id="remoteVideo" autoplay playsinline class="bg-black"></video>
+
+        <video id="localVideo" autoplay playsinline muted class="bg-gray-700"></video>
+
+        <div id="callStatus" class="absolute top-5 bg-black bg-opacity-50 px-4 py-2 rounded-lg">
+            <p>Initializing call...</p>
+        </div>
+
+        <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 bg-black bg-opacity-40 p-4 rounded-full">
+            <button id="toggleMicBtn" class="control-btn bg-gray-600 hover:bg-gray-500">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button id="toggleCameraBtn" class="control-btn bg-gray-600 hover:bg-gray-500">
+                <i class="fas fa-video"></i>
+            </button>
+            <button id="endCallBtn" class="control-btn bg-red-600 hover:bg-red-500">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // --- Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+            authDomain: "dermastreak-2caae.firebaseapp.com",
+            projectId: "dermastreak-2caae",
+            storageBucket: "dermastreak-2caae.appspot.com",
+            messagingSenderId: "32726012100",
+            appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+        };
+
+        // --- Initialize Firebase ---
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- DOM Elements ---
+        const localVideo = document.getElementById('localVideo');
+        const remoteVideo = document.getElementById('remoteVideo');
+        const callStatus = document.getElementById('callStatus');
+        const toggleMicBtn = document.getElementById('toggleMicBtn');
+        const toggleCameraBtn = document.getElementById('toggleCameraBtn');
+        const endCallBtn = document.getElementById('endCallBtn');
+
+        // --- WebRTC Globals ---
+        let localStream;
+        let remoteStream;
+        let peerConnection;
+        let callDocRef; // Firestore document for the call
+        let callerCandidatesCollection;
+        let calleeCandidatesCollection;
+
+        // --- STUN servers for NAT traversal ---
+        const servers = {
+            iceServers: [{
+                urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+            }, ],
+        };
+
+        // --- Main Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(async user => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                } else {
+                    await setupCall();
+
+                    // Add button event listeners
+                    toggleMicBtn.addEventListener('click', toggleMic);
+                    toggleCameraBtn.addEventListener('click', toggleCamera);
+                    endCallBtn.addEventListener('click', endCall);
+                }
+            });
+        });
+
+        async function setupCall() {
+            try {
+                // 1. Get user media
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localVideo.srcObject = localStream;
+
+                // 2. Get call details from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const appointmentId = urlParams.get('appointment');
+                if (!appointmentId) {
+                    throw new Error("Appointment ID is missing from the URL.");
+                }
+
+                // 3. Create Firestore references
+                // The call data will be stored in a subcollection of the appointment
+                callDocRef = db.collection('appointments').doc(appointmentId).collection('calls').doc('callData');
+                callerCandidatesCollection = callDocRef.collection('callerCandidates');
+                calleeCandidatesCollection = callDocRef.collection('calleeCandidates');
+
+                // 4. Create Peer Connection
+                peerConnection = new RTCPeerConnection(servers);
+
+                // 5. Push local tracks to the connection
+                localStream.getTracks().forEach(track => {
+                    peerConnection.addTrack(track, localStream);
+                });
+
+                // 6. Listen for remote tracks
+                peerConnection.ontrack = event => {
+                    remoteVideo.srcObject = event.streams[0];
+                };
+
+                // 7. Check if a call offer exists (Are we the caller or callee?)
+                const callDoc = await callDocRef.get();
+
+                if (!callDoc.exists) {
+                    // I am the CALLER
+                    callStatus.textContent = 'Calling...';
+                    await createOffer();
+                } else {
+                    // I am the CALLEE
+                    callStatus.textContent = 'Answering call...';
+                    await answerOffer();
+                }
+            } catch (error) {
+                console.error("Error setting up call:", error);
+                callStatus.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function createOffer() {
+            // Listen for ICE candidates and add them to Firestore
+            peerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    callerCandidatesCollection.add(event.candidate.toJSON());
+                }
+            };
+
+            // Create offer
+            const offerDescription = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offerDescription);
+
+            const offer = {
+                sdp: offerDescription.sdp,
+                type: offerDescription.type,
+            };
+            
+            // Set the offer in the Firestore document
+            await callDocRef.set({ offer });
+
+            // Listen for the answer from the callee
+            callDocRef.onSnapshot(async (snapshot) => {
+                const data = snapshot.data();
+                if (!peerConnection.currentRemoteDescription && data?.answer) {
+                    callStatus.textContent = 'Connected';
+                    const answerDescription = new RTCSessionDescription(data.answer);
+                    await peerConnection.setRemoteDescription(answerDescription);
+                }
+            });
+
+            // Listen for ICE candidates from the callee
+            calleeCandidatesCollection.onSnapshot(snapshot => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added') {
+                        const candidate = new RTCIceCandidate(change.doc.data());
+                        peerConnection.addIceCandidate(candidate);
+                    }
+                });
+            });
+        }
+
+        async function answerOffer() {
+            // Listen for ICE candidates and add them to Firestore
+            peerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    calleeCandidatesCollection.add(event.candidate.toJSON());
+                }
+            };
+            
+            const callData = (await callDocRef.get()).data();
+            const offerDescription = new RTCSessionDescription(callData.offer);
+            await peerConnection.setRemoteDescription(offerDescription);
+            
+            const answerDescription = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answerDescription);
+
+            const answer = {
+                type: answerDescription.type,
+                sdp: answerDescription.sdp,
+            };
+
+            await callDocRef.update({ answer });
+            callStatus.textContent = 'Connected';
+
+            // Listen for ICE candidates from the caller
+            callerCandidatesCollection.onSnapshot(snapshot => {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added') {
+                        const candidate = new RTCIceCandidate(change.doc.data());
+                        peerConnection.addIceCandidate(candidate);
+                    }
+                });
+            });
+        }
+
+        // --- UI Control Functions ---
+        function toggleMic() {
+            const audioTrack = localStream.getTracks().find(track => track.kind === 'audio');
+            if (audioTrack.enabled) {
+                audioTrack.enabled = false;
+                toggleMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                toggleMicBtn.classList.replace('bg-gray-600', 'bg-blue-600');
+            } else {
+                audioTrack.enabled = true;
+                toggleMicBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                toggleMicBtn.classList.replace('bg-blue-600', 'bg-gray-600');
+            }
+        }
+
+        function toggleCamera() {
+            const videoTrack = localStream.getTracks().find(track => track.kind === 'video');
+            if (videoTrack.enabled) {
+                videoTrack.enabled = false;
+                toggleCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i>';
+                toggleCameraBtn.classList.replace('bg-gray-600', 'bg-blue-600');
+            } else {
+                videoTrack.enabled = true;
+                toggleCameraBtn.innerHTML = '<i class="fas fa-video"></i>';
+                toggleCameraBtn.classList.replace('bg-blue-600', 'bg-gray-600');
+            }
+        }
+
+        async function endCall() {
+            // Stop local tracks
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+
+            // Close the connection
+            if (peerConnection) {
+                peerConnection.close();
+            }
+
+            // IMPORTANT: Clean up the call document in Firestore
+            if (callDocRef) {
+                const callerCandidates = await callerCandidatesCollection.get();
+                callerCandidates.forEach(async (candidate) => await candidate.ref.delete());
+
+                const calleeCandidates = await calleeCandidatesCollection.get();
+                calleeCandidates.forEach(async (candidate) => await candidate.ref.delete());
+
+                await callDocRef.delete();
+            }
+
+            // Redirect user back to appointments page
+            window.location.href = 'appointments.html'; 
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register | AROYKYA SAHAYAK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .btn-scale { transition: transform 0.3s ease; display: inline-block; }
+    .btn-scale:hover, .btn-scale:focus { transform: scale(1.05); outline: none; }
+    #profilePreview { max-height: 150px; max-width: 150px; border-radius: 50%; object-fit: cover; }
+    
+    /* Mobile menu styles */
+    .mobile-menu {
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    .mobile-menu.active {
+      display: block;
+      max-height: 500px;
+    }
+    .mobile-menu-button {
+      transition: transform 0.3s ease;
+    }
+    .mobile-menu-button.active {
+      transform: rotate(90deg);
+    }
+    
+    /* Form input styling for better mobile experience */
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-slate-900 min-h-screen flex flex-col">
+
+    <header class="bg-white shadow">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <a href="home.html" class="flex items-center space-x-3">
+          <img
+            src="very new medicine.jpg"
+            class="h-12 w-12 rounded-full"
+            alt="AROYKYA SAHAYAK Logo"
+          />
+          <span class="font-extrabold text-slate-900 text-lg">AROYKYA SAHAYAK</span>
+        </a>
+
+        <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
+          <a href="home.html" class="hover:text-green-600">Home</a>
+          <a href="about.html" class="hover:text-green-600">About</a>
+          <a href="services.html" class="hover:text-green-600">Services</a>
+          <a href="blog.html" class="hover:text-green-600">Blog</a>
+          <a href="contact.html" class="hover:text-green-600">Contact</a>
+          <a href="login.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">Login</a>
+          <a href="registration.html" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Sign Up</a>
+        </div>
+        
+        <div class="flex md:hidden">
+          <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
+        <a href="home.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
+        <a href="about.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+        <a href="services.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Services</a>
+        <a href="blog.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Blog</a>
+        <a href="contact.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Contact</a>
+        <div class="mt-4 space-y-3">
+          <a href="login.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">Login</a>
+          <a href="registration.html" class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Sign Up</a>
+        </div>
+      </div>
+    </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+  <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+    <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6">Create Your Account</h1>
+    <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-6" enctype="multipart/form-data">
+
+      <div>
+        <label class="font-medium block mb-2">Role</label>
+        <select id="role" onchange="toggleFields()" class="w-full border px-4 py-3 rounded-lg" required>
+          <option value="">Select your role</option>
+          <option value="patient">Patient</option>
+          <option value="doctor">Doctor</option>
+        </select>
+      </div>
+
+      <div id="common-fields" class="hidden space-y-6">
+        <div>
+          <label class="block mb-2 font-medium text-gray-700">Profile Picture</label>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="relative">
+              <input name="profilePicture" id="profilePicture" type="file" accept="image/*" class="hidden" onchange="previewProfileImage(event)">
+              <label for="profilePicture" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition inline-block">Choose Image</label>
+            </div>
+            <img id="profilePreview" src="" class="hidden h-20 w-20 rounded-full object-cover border mx-auto sm:mx-0">
+          </div>
+        </div>
+        
+        <div class="space-y-6">
+          <input name="name" type="text" placeholder="Full Name" required class="border rounded-lg px-4 py-3">
+          <input name="email" type="email" placeholder="Email" required class="border rounded-lg px-4 py-3">
+          <input name="phone" type="tel" placeholder="Phone Number" required class="border rounded-lg px-4 py-3">
+          <input name="age" type="number" placeholder="Age" min="0" required class="border rounded-lg px-4 py-3">
+          <select name="gender" required class="border rounded-lg px-4 py-3">
+            <option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option>
+          </select>
+          <input name="password" type="password" placeholder="Password" required minlength="6" class="border rounded-lg px-4 py-3">
+          <input name="confirmPassword" type="password" placeholder="Confirm Password" required minlength="6" class="border rounded-lg px-4 py-3">
+        </div>
+      </div>
+
+      <div id="doctor-fields" class="hidden space-y-6">
+        <input name="languagesSpoken" type="text" placeholder="Languages Spoken (comma separated)" class="border rounded-lg px-4 py-3">
+        <input name="specialization" type="text" placeholder="Specialization" class="border rounded-lg px-4 py-3">
+        <input name="qualifications" type="text" placeholder="Qualifications" class="border rounded-lg px-4 py-3">
+        <input name="experience" type="number" placeholder="Years of Experience" min="0" class="border rounded-lg px-4 py-3">
+        <input name="mrn" type="text" placeholder="Medical Registration Number" class="border rounded-lg px-4 py-3">
+        <input name="clinics" type="text" placeholder="Affiliated Clinics/Hospitals (comma separated)" class="border rounded-lg px-4 py-3">
+      </div>
+
+      <p id="error-message" class="text-red-600 text-center font-medium"></p>
+
+      <button type="submit" id="signupButton" class="w-full bg-green-600 text-white font-semibold py-3 rounded-md hover:bg-green-700">Sign Up</button>
+    </form>
+  </div>
+</main>
+
+    <footer
+      class="w-full bg-[#0a1e3a] text-slate-300 border-t border-gray-700 py-10"
+    >
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+        <div>
+          <img
+            src="very new medicine.jpg"
+            alt="dermastreak Logo"
+            class="w-16 h-16 mb-4 rounded-full"
+          />
+          <p class="text-sm leading-relaxed">
+            AROYKYA SAHAYAK helps you track skin progress, get AI insights, and
+            consult top dermatologists—all from your phone.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="home.html" class="hover:underline">Home</a></li>
+            <li><a href="about.html" class="hover:underline">About Us</a></li>
+            <li>
+              <a href="services.html" class="hover:underline">Our Services</a>
+            </li>
+            <li>
+              <a href="blog.html" class="hover:underline">Skin Tips Blog</a>
+            </li>
+            <li><a href="contact.html" class="hover:underline">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+          <p class="text-sm">📍 Tamil Nadu, India</p>
+          <p class="text-sm mt-2">📞 +91 98765 43210</p>
+          <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+          <ul class="space-y-2 text-sm mb-4">
+            <li>
+              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="terms.html" class="hover:underline"
+                >Terms & Conditions</a
+              >
+            </li>
+          </ul>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="#" class="hover:text-white"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+      >
+        © 2025 AROYKYA SAHAYAK. All rights reserved.
+      </div>
+    </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    
+    if(mobileMenuButton) {
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        mobileMenuButton.classList.toggle('active');
+        
+        const icon = mobileMenuButton.querySelector('svg');
+        if (mobileMenu.classList.contains('active')) {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+        } else {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        }
+      });
+    }
+  });
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    updateProfile,
+    deleteUser
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    setDoc, 
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+    authDomain: "dermastreak-2caae.firebaseapp.com",
+    projectId: "dermastreak-2caae",
+    storageBucket: "dermastreak-2caae.appspot.com",
+    messagingSenderId: "32726012100",
+    appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+  };
+
+  // Cloudinary configuration
+  const CLOUD_NAME = "dm72qhrol";
+  const UPLOAD_PRESET = "dermastreak_uploads";
+  const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Function to preview selected profile image
+  window.previewProfileImage = function(event) {
+    const reader = new FileReader();
+    const preview = document.getElementById("profilePreview");
+    
+    reader.onload = function() {
+      preview.src = reader.result;
+      preview.classList.remove("hidden");
+    }
+    
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  window.toggleFields = function() {
+    const role = document.getElementById("role").value;
+    document.getElementById("common-fields").classList.toggle("hidden", role === "");
+    document.getElementById("doctor-fields").classList.toggle("hidden", role !== "doctor");
+  }
+
+  // Function to upload image to Cloudinary
+  async function uploadImageToCloudinary(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', UPLOAD_PRESET);
+    
+    try {
+      const response = await fetch(UPLOAD_URL, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Image upload failed');
+      }
+      
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
+  }
+
+  window.handleSignup = async function(event) {
+    event.preventDefault();
+    const errorMsg = document.getElementById("error-message");
+    const signupBtn = document.getElementById("signupButton");
+    errorMsg.textContent = "";
+    signupBtn.disabled = true;
+    signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+
+    let userCred; // Define userCred here to access it in the catch block
+
+    try {
+      const form = event.target;
+      const role = document.getElementById("role").value;
+      const email = form.email.value;
+      const password = form.password.value;
+      const confirmPassword = form.confirmPassword.value;
+      const name = form.name.value;
+      const gender = form.gender.value;
+      const age = form.age.value;
+      const phone = form.phone.value;
+      const profilePictureFile = form.profilePicture.files[0];
+
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match!");
+      }
+      
+      // Create user first
+      userCred = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Upload profile picture to Cloudinary if provided
+      let profilePictureUrl = "";
+      if (profilePictureFile) {
+        profilePictureUrl = await uploadImageToCloudinary(profilePictureFile);
+      }
+
+      // Update Firebase Auth profile
+      await updateProfile(userCred.user, { 
+        displayName: name,
+        photoURL: profilePictureUrl || null
+      });
+
+      // Prepare user data for Firestore
+      const userData = {
+        uid: userCred.user.uid,
+        role,
+        name,
+        email,
+        gender,
+        age: parseInt(age),
+        phone,
+        profilePicture: profilePictureUrl || "",
+        createdAt: serverTimestamp()
+      };
+
+      // Add doctor fields
+      if (role === 'doctor') {
+        userData.languagesSpoken = form.languagesSpoken.value.split(',').map(item => item.trim());
+        userData.specialization = form.specialization.value;
+        userData.qualifications = form.qualifications.value;
+        userData.experience = parseInt(form.experience.value) || 0;
+        userData.mrn = form.mrn.value;
+        userData.clinics = form.clinics.value.split(',').map(item => item.trim());
+      }
+
+      // Save to Firestore
+      await setDoc(doc(db, "users", userCred.user.uid), userData);
+
+      // Store username in multiple places
+      sessionStorage.setItem('username', name);
+      localStorage.setItem('username', name);
+      localStorage.setItem('userRole', role);
+
+      // Success
+      errorMsg.className = "text-center text-green-600 font-medium";
+      errorMsg.textContent = "Registration successful! Redirecting...";
+      
+      setTimeout(() => {
+        window.location.href = role === "doctor" 
+          ? `doctordashboard.html?name=${encodeURIComponent(name)}&role=doctor`
+          : `patient.html?name=${encodeURIComponent(name)}&role=patient`;
+      }, 1500);
+
+    } catch (error) {
+      console.error("Signup error:", error);
+      errorMsg.textContent = error.message;
+      errorMsg.className = "text-center text-red-600 font-medium";
+      signupBtn.disabled = false;
+      signupBtn.innerHTML = "Sign Up";
+
+      // Clean up auth user if Firestore write fails
+      if (userCred && userCred.user) {
+        try {
+          await deleteUser(userCred.user);
+          console.log("Auth user cleaned up after Firestore failure.");
+        } catch (deleteError) {
+          console.error("Error deleting user during cleanup:", deleteError);
+        }
+      }
+    }
+  }
+
+  window.onload = toggleFields;
+</script>
+
+</body>
+</html>

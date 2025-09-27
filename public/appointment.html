@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Appointments | AROYKYA SAHAYAK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <style>
+    .appointment-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .status-pending {
+      background-color: #FEF3C7;
+      color: #92400E;
+    }
+    .status-confirmed {
+      background-color: #D1FAE5;
+      color: #065F46;
+    }
+    .status-cancelled {
+      background-color: #FEE2E2;
+      color: #991B1B;
+    }
+    .status-completed {
+      background-color: #E0E7FF;
+      color: #3730A3;
+    }
+    .loading-spinner {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .modal {
+      transition: all 0.3s ease;
+    }
+    .note-textarea {
+      min-height: 100px;
+    }
+    
+    /* Mobile menu styles */
+    .mobile-menu {
+      display: none;
+    }
+    .mobile-menu.active {
+      display: block;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .mobile-menu-button {
+        display: block;
+      }
+      .filter-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 8px;
+      }
+      .filter-tabs button {
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .appointment-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .appointment-actions button {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+      <a href="doctordashboard.html" class="flex items-center space-x-3">
+        <img
+          src="very new medicine.jpg"
+          class="h-10 w-10 md:h-12 md:w-12 rounded-full"
+          alt="dermastreak Logo"
+        />
+        <span class="font-extrabold text-slate-900 text-lg">AROYKYA SAHAYAK</span>
+      </a>
+      
+      <!-- Mobile menu button -->
+      <div class="flex md:hidden">
+        <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-4 text-sm font-normal nav-links">
+        <a href="doctordashboard.html" class="hover:text-green-600 text-green-500">Home</a>
+        <a href="about2.html" class="hover:text-green-600">About</a>
+        <a
+          href="profile.html"
+          class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >My Profile</a
+        >
+        <a
+          href="home.html"
+          class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >Log Out</a
+        >
+      </div>
+    </div>
+    
+    <!-- Mobile menu (hidden by default) -->
+    <div class="mobile-menu hidden md:hidden bg-white px-4 py-4 border-t">
+      <a href="doctordashboard.html" class="block py-2 text-green-500 hover:text-green-600">Home</a>
+      <a href="about2.html" class="block py-2 hover:text-green-600">About</a>
+      <a href="profile.html" class="block py-2 hover:text-green-600">My Profile</a>
+      <a href="home.html" class="block py-2 hover:text-green-600">Log Out</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8">
+      <div class="mb-4 md:mb-0">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900" id="pageTitle">My Appointments</h1>
+        <p class="text-gray-600 text-sm md:text-base" id="pageSubtitle">View and manage your appointments</p>
+      </div>
+      <!-- <a href="doctors.html" id="newAppointmentBtn" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium self-start md:self-auto">
+        <i class="fas fa-plus mr-2"></i> New Appointment
+      </a> -->
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs flex border-b border-gray-200 mb-6 overflow-x-auto">
+      <button onclick="filterAppointments('all')" class="px-3 py-2 md:px-4 md:py-2 font-medium text-sm border-b-2 border-green-500 text-green-600">All</button>
+      <button onclick="filterAppointments('pending')" class="px-3 py-2 md:px-4 md:py-2 font-medium text-sm">Pending</button>
+      <button onclick="filterAppointments('confirmed')" class="px-3 py-2 md:px-4 md:py-2 font-medium text-sm">Confirmed</button>
+      <button onclick="filterAppointments('completed')" class="px-3 py-2 md:px-4 md:py-2 font-medium text-sm">Completed</button>
+      <button onclick="filterAppointments('cancelled')" class="px-3 py-2 md:px-4 md:py-2 font-medium text-sm">Cancelled</button>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="text-center py-12">
+      <div class="inline-block loading-spinner text-green-600 text-4xl mb-4">
+        <i class="fas fa-spinner"></i>
+      </div>
+      <p class="text-gray-600">Loading appointments...</p>
+    </div>
+
+    <!-- Appointments List -->
+    <div id="appointmentsContainer" class="space-y-4">
+      <!-- Appointments will be loaded here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-12">
+      <i class="fas fa-calendar-check text-4xl text-gray-300 mb-4"></i>
+      <h3 class="text-xl font-medium text-gray-700 mb-2" id="emptyStateTitle">No appointments found</h3>
+      <p class="text-gray-500 mb-4" id="emptyStateMessage">You don't have any appointments yet.</p>
+      <a href="doctors.html" id="emptyStateAction" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+        Find a Doctor
+      </a>
+    </div>
+
+    <!-- Cancel Confirmation Modal -->
+    <div id="cancelModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4 modal">
+      <div class="bg-white rounded-lg p-4 md:p-6 max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold mb-4">Cancel Appointment</h3>
+        <p class="mb-4">Are you sure you want to cancel this appointment?</p>
+        <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+          <button type="button" onclick="closeCancelModal()" 
+                  class="px-4 py-2 border rounded-lg hover:bg-gray-50">No, Keep It</button>
+          <button type="button" id="confirmCancelBtn"
+                  class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+            Yes, Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Doctor Note Modal -->
+    <div id="noteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4 modal">
+      <div class="bg-white rounded-lg p-4 md:p-6 max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold mb-4">Add Doctor's Note</h3>
+        <form id="noteForm" class="space-y-4">
+          <input type="hidden" id="noteAppointmentId">
+          <div>
+            <label class="block text-sm font-medium mb-1">Note</label>
+            <textarea id="doctorNote" rows="4" class="w-full border rounded-lg px-4 py-2 note-textarea" 
+                      placeholder="Enter your notes for this appointment"></textarea>
+          </div>
+          <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+            <button type="button" onclick="closeNoteModal()" 
+                    class="px-4 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
+            <button type="submit" id="submitNoteBtn"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+              Save Note
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+      <div>
+        <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
+          <img
+            src="very new medicine.jpg"
+            class="h-full w-full object-cover"
+            alt="dermastreak Logo"
+          />
+        </div>
+        <p class="text-sm leading-relaxed">
+         AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
+          skin progress, get tips, and consult top dermatologists from the
+          comfort of your home.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="doctordashboard.html" class="hover:underline">Home</a></li>
+          <li><a href="about2.html" class="hover:underline">About Us</a></li>
+          <li>
+            <a href="services2.html" class="hover:underline">Our Services</a>
+          </li>
+          <li>
+            <a href="blog2.html" class="hover:underline">Skin Tips Blog</a>
+          </li>
+          <li><a href="contact2.html" class="hover:underline">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+        <p class="text-sm">📍 Tamil Nadu, India</p>
+        <p class="text-sm mt-2">📞 +91 98765 43210</p>
+        <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
+        <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+      </div>
+      <div>
+        <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+        <ul class="space-y-2 text-sm mb-4">
+          <li>
+            <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+          </li>
+          <li>
+            <a href="terms.html" class="hover:underline"
+              >Terms & Conditions</a
+            >
+          </li>
+        </ul>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-white"
+            ><i class="fab fa-facebook-f"></i
+          ></a>
+          <a href="#" class="hover:text-white"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a href="#" class="hover:text-white"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="#" class="hover:text-white"
+            ><i class="fab fa-linkedin-in"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+    >
+      © 2025 AROYKYA SAHAYAK. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+      authDomain: "dermastreak-2caae.firebaseapp.com",
+      projectId: "dermastreak-2caae",
+      storageBucket: "dermastreak-2caae.appspot.com",
+      messagingSenderId: "32726012100",
+      appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM elements
+    const appointmentsContainer = document.getElementById('appointmentsContainer');
+    const loadingElement = document.getElementById('loading');
+    const emptyStateElement = document.getElementById('emptyState');
+    const cancelModal = document.getElementById('cancelModal');
+    const noteModal = document.getElementById('noteModal');
+    const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+    const pageTitle = document.getElementById('pageTitle');
+    const pageSubtitle = document.getElementById('pageSubtitle');
+    const newAppointmentBtn = document.getElementById('newAppointmentBtn');
+    const emptyStateTitle = document.getElementById('emptyStateTitle');
+    const emptyStateMessage = document.getElementById('emptyStateMessage');
+    const emptyStateAction = document.getElementById('emptyStateAction');
+    
+    let currentFilter = 'all';
+    let appointments = [];
+    let appointmentToCancel = null;
+    let userRole = null;
+    let isDoctor = false;
+
+    // Format date
+    function formatDate(dateString) {
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+
+    // Format time
+    function formatTime(timeString) {
+      return timeString; // You can enhance this with more sophisticated time formatting
+    }
+
+    // Show notification
+    function showNotification(message, isSuccess = true) {
+      const notification = document.createElement('div');
+      notification.className = `fixed bottom-4 right-4 ${isSuccess ? 'bg-green-600' : 'bg-red-600'} text-white px-6 py-3 rounded-lg shadow-lg flex items-center`;
+      notification.innerHTML = `
+        <i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-3"></i>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" class="ml-4">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 5000);
+    }
+
+    // Load user role and then appointments
+    async function loadUserAndAppointments(filter = 'all') {
+      try {
+        currentFilter = filter;
+        loadingElement.classList.remove('hidden');
+        appointmentsContainer.innerHTML = '';
+        emptyStateElement.classList.add('hidden');
+
+        const user = auth.currentUser;
+        if (!user) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        // Get user role
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (!userDoc.exists) {
+          throw new Error("User profile not found");
+        }
+
+        userRole = userDoc.data().role;
+        isDoctor = userRole === 'doctor';
+
+        // Update UI based on role
+        updateUIForRole();
+
+        // Load appointments
+        loadAppointments();
+      } catch (error) {
+        console.error("Error loading user data:", error);
+        showNotification("Failed to load user data. Please try again.", false);
+        loadingElement.classList.add('hidden');
+      }
+    }
+
+    // Update UI based on user role
+    function updateUIForRole() {
+      if (isDoctor) {
+        pageTitle.textContent = "My Appointments";
+        pageSubtitle.textContent = "View and manage your appointments";
+        emptyStateTitle.textContent = "No patient appointments";
+        emptyStateMessage.textContent = "You don't have any patient appointments yet.";
+        emptyStateAction.classList.add('hidden');
+      } else {
+        pageTitle.textContent = "My Appointments";
+        pageSubtitle.textContent = "View and manage your appointments";
+        emptyStateTitle.textContent = "No appointments found";
+        emptyStateMessage.textContent = "You don't have any appointments yet. Book one with our specialists.";
+        emptyStateAction.classList.remove('hidden');
+      }
+    }
+
+    // Load appointments
+    function loadAppointments() {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      let query = db.collection('appointments');
+      
+      if (isDoctor) {
+        query = query.where('doctorId', '==', user.uid);
+      } else {
+        query = query.where('patientId', '==', user.uid);
+      }
+
+      if (currentFilter !== 'all') {
+        query = query.where('status', '==', currentFilter);
+      }
+
+      query = query.orderBy('date', 'desc').orderBy('time', 'desc');
+
+      // Real-time listener for appointments
+      query.onSnapshot(snapshot => {
+        appointments = [];
+        snapshot.forEach(doc => {
+          appointments.push({ id: doc.id, ...doc.data() });
+        });
+
+        renderAppointments();
+        
+        // Check for status changes
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'modified') {
+            const newStatus = change.doc.data().status;
+            const oldStatus = change.doc.data().status;
+            if (newStatus !== oldStatus) {
+              showNotification(`Appointment status changed to ${newStatus}`);
+            }
+          }
+        });
+
+        if (appointments.length === 0) {
+          emptyStateElement.classList.remove('hidden');
+        }
+        
+        loadingElement.classList.add('hidden');
+      }, error => {
+        console.error("Error loading appointments:", error);
+        showNotification("Failed to load appointments. Please try again.", false);
+        loadingElement.classList.add('hidden');
+      });
+    }
+
+    // Render appointments
+    function renderAppointments() {
+      appointmentsContainer.innerHTML = '';
+      
+      if (appointments.length === 0) {
+        emptyStateElement.classList.remove('hidden');
+        return;
+      }
+
+      appointments.forEach(appointment => {
+        const card = document.createElement('div');
+        card.className = 'appointment-card bg-white rounded-lg shadow-sm p-4 md:p-6 transition-all duration-300';
+        
+        const statusClass = `status-${appointment.status}`;
+        const isPending = appointment.status === 'pending';
+        const isConfirmed = appointment.status === 'confirmed';
+        const isCompleted = appointment.status === 'completed';
+        const isCancelled = appointment.status === 'cancelled';
+        
+        // Doctor-specific content
+        const doctorContent = isDoctor ? `
+          <div class="mb-2">
+            <p class="text-gray-700"><span class="font-medium">Patient:</span> ${appointment.patientName}</p>
+          </div>
+        ` : '';
+        
+        // Patient-specific content
+        const patientContent = !isDoctor ? `
+          <div class="mb-2">
+            <p class="text-gray-700"><span class="font-medium">Doctor:</span> Dr. ${appointment.doctorName}</p>
+          </div>
+        ` : '';
+        
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <h3 class="text-lg font-semibold">${isDoctor ? 'Appointment with Patient' : 'Appointment with Dr. ' + appointment.doctorName}</h3>
+              <p class="text-gray-500 text-sm">${formatDate(appointment.date)} at ${formatTime(appointment.time)}</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">
+              ${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+            </span>
+          </div>
+          
+          ${doctorContent}
+          ${patientContent}
+          
+          <div class="mb-4">
+            <p class="text-gray-700"><span class="font-medium">Reason:</span> ${appointment.reason || 'Not specified'}</p>
+            ${appointment.doctorNote ? `
+              <p class="text-gray-700 mt-2">
+                <span class="font-medium">Doctor's Note:</span> ${appointment.doctorNote}
+              </p>
+            ` : ''}
+          </div>
+          
+          <div class="appointment-actions flex flex-wrap justify-end gap-2">
+            ${(isPending || isConfirmed) && !isDoctor ? `
+              <button onclick="openCancelModal('${appointment.id}')" 
+                      class="px-3 py-1 md:px-4 md:py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-50 transition-colors text-sm">
+                Cancel
+              </button>
+            ` : ''}
+            
+            ${isDoctor && isPending ? `
+              <button onclick="updateAppointmentStatus('${appointment.id}', 'confirmed')" 
+                      class="px-3 py-1 md:px-4 md:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                Confirm
+              </button>
+              <button onclick="updateAppointmentStatus('${appointment.id}', 'cancelled')" 
+                      class="px-3 py-1 md:px-4 md:py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-50 transition-colors text-sm">
+                Reject
+              </button>
+            ` : ''}
+            
+            ${isDoctor && isConfirmed ? `
+              <button onclick="updateAppointmentStatus('${appointment.id}', 'completed')" 
+                      class="px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                Mark Complete
+              </button>
+              <button onclick="openNoteModal('${appointment.id}')" 
+                      class="px-3 py-1 md:px-4 md:py-2 border border-gray-500 text-gray-500 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+                Add Note
+              </button>
+            ` : ''}
+            
+            ${isCompleted ? `
+              <button onclick="viewPrescription('${appointment.id}')" 
+                      class="px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                View Details
+              </button>
+            ` : ''}
+          
+            ${(isConfirmed || isCompleted) ? `
+           <button onclick="openChat('${appointment.patientId}', '${appointment.id}')"  
+                      class="px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                Open Chat
+              </button>
+               <button onclick="openVideoCall('${appointment.patientId}', '${appointment.id}')"  
+                      class="px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                video call
+              </button>
+              ${isDoctor ? `
+      <button onclick="viewPatientStreaks('${appointment.patientId}', '${appointment.patientName}')" 
+              class="px-3 py-1 md:px-4 md:py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">
+        View Streaks
+      </button>
+    ` : ''}
+  ` : ''}
+          </div>
+        `;
+        
+        appointmentsContainer.appendChild(card);
+      });
+    }
+
+    // Filter appointments
+    function filterAppointments(filter) {
+      loadUserAndAppointments(filter);
+    }
+
+    // Cancel appointment functions
+    function openCancelModal(appointmentId) {
+      appointmentToCancel = appointmentId;
+      cancelModal.classList.remove('hidden');
+    }
+
+    function closeCancelModal() {
+      cancelModal.classList.add('hidden');
+      appointmentToCancel = null;
+    }
+
+    async function cancelAppointment() {
+      if (!appointmentToCancel) return;
+      
+      const button = confirmCancelBtn;
+      const originalText = button.innerHTML;
+      button.disabled = true;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+      
+      try {
+        await db.collection('appointments').doc(appointmentToCancel).update({
+          status: 'cancelled',
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        closeCancelModal();
+        showNotification('Appointment cancelled successfully');
+      } catch (error) {
+        console.error("Error cancelling appointment:", error);
+        showNotification("Failed to cancel appointment. Please try again.", false);
+      } finally {
+        button.disabled = false;
+        button.innerHTML = originalText;
+      }
+    }
+
+    // Doctor note functions
+    function openNoteModal(appointmentId) {
+      document.getElementById('noteAppointmentId').value = appointmentId;
+      noteModal.classList.remove('hidden');
+    }
+
+    function closeNoteModal() {
+      noteModal.classList.add('hidden');
+      document.getElementById('noteForm').reset();
+    }
+
+    async function saveDoctorNote(e) {
+      e.preventDefault();
+      const appointmentId = document.getElementById('noteAppointmentId').value;
+      const note = document.getElementById('doctorNote').value.trim();
+      const button = document.getElementById('submitNoteBtn');
+      
+      if (!note) {
+        showNotification("Please enter a note", false);
+        return;
+      }
+
+      const originalText = button.innerHTML;
+      button.disabled = true;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      
+      try {
+        await db.collection('appointments').doc(appointmentId).update({
+          doctorNote: note,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        closeNoteModal();
+        showNotification('Note saved successfully');
+      } catch (error) {
+        console.error("Error saving note:", error);
+        showNotification("Failed to save note. Please try again.", false);
+      } finally {
+        button.disabled = false;
+        button.innerHTML = originalText;
+      }
+    }
+
+    // Update appointment status (for doctors)
+    async function updateAppointmentStatus(appointmentId, status) {
+      try {
+        await db.collection('appointments').doc(appointmentId).update({
+          status: status,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showNotification(`Appointment ${status} successfully`);
+      } catch (error) {
+        console.error("Error updating appointment status:", error);
+        showNotification("Failed to update appointment. Please try again.", false);
+      }
+    }
+
+    // View prescription (placeholder function)
+    function viewPrescription(appointmentId) {
+      // You would implement this to show prescription details
+      alert('Prescription viewing functionality would be implemented here for appointment ID: ' + appointmentId);
+    }
+
+    // Logout function
+    window.logout = function() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      }).catch(error => {
+        showNotification("Logout failed: " + error.message, false);
+      });
+    };
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set up form submit handlers
+      document.getElementById('noteForm').addEventListener('submit', saveDoctorNote);
+      confirmCancelBtn.addEventListener('click', cancelAppointment);
+      
+      // Mobile menu toggle
+      document.querySelector('.mobile-menu-button').addEventListener('click', function() {
+        document.querySelector('.mobile-menu').classList.toggle('active');
+      });
+
+      // Check auth state
+      auth.onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = 'login.html';
+        } else {
+          loadUserAndAppointments();
+        }
+      });
+    });
+    
+    // Open chat with doctor/patient
+    function openChat(recipientId, appointmentId) {
+      window.location.href = `chat.html?recipient=${recipientId}&appointment=${appointmentId}`;
+    }
+    function openVideoCall(recipientId, appointmentId) {
+      window.location.href = `videocall.html?recipient=${recipientId}&appointment=${appointmentId}`;
+    }
+    
+    function viewPatientStreaks(patientId, patientName) {
+      window.location.href = `streak.html?patientId=${patientId}&patientName=${encodeURIComponent(patientName)}`;
+    }
+  </script>
+</body>
+</html>
