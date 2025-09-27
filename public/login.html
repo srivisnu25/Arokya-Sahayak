@@ -12,8 +12,34 @@
   <style>
     body { 
       font-family: 'Inter', sans-serif; 
-      background-color: #f3f9ff;
     }
+    /* Custom colors */
+    .color-primary-dark-blue { color: #01579B; }
+    .bg-primary-dark-blue { background-color: #01579B; }
+    .border-primary-dark-blue { border-color: #01579B; }
+
+    .color-primary-light-blue { color: #00AEEF; }
+    .bg-primary-light-blue { background-color: #00AEEF; }
+    .border-primary-light-blue { border-color: #00AEEF; }
+
+    /* Component styles */
+    .header-bg { background-color: #01579B; }
+    .footer-bg { background-color: #01579B; }
+    
+    .btn-primary {
+      background-color: #00AEEF;
+      color: white;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #008fcc;
+    }
+    .btn-primary:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.5);
+    }
+
     .btn-scale { 
       transition: transform 0.3s ease; 
       display: inline-block; 
@@ -34,178 +60,134 @@
       display: block;
       max-height: 500px;
     }
-    .mobile-menu-button {
-      transition: transform 0.3s ease;
-    }
     .mobile-menu-button.active {
       transform: rotate(90deg);
     }
+    
+    /* Custom focus styles for form inputs */
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00AEEF;
+      box-shadow: 0 0 0 2px rgba(0, 174, 239, 0.2);
+    }
   </style>
 </head>
-<body class="bg-gray-100 text-slate-900 min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="bg-white shadow sticky top-0 z-50">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <header class="header-bg shadow sticky top-0 z-50 text-white">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
       <div class="flex items-center justify-between w-full">
         <a href="home.html" class="flex items-center space-x-3">
-          <img
-            src="very new medicine.jpg"
-            class="h-10 w-10 md:h-12 md:w-12 rounded-full"
-            alt="AROYKYA SAHAYAK Logo"
-          />
-          <span class="font-extrabold text-slate-900 text-base md:text-lg">AROYKYA SAHAYAK</span>
+          <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo">
+          <span class="font-extrabold text-base md:text-lg">AROKYA SAHAYAK</span>
         </a>
         
-        <!-- Mobile menu button -->
-        <div class="flex md:hidden">
-          <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
+        <div class="flex items-center">
+          <div class="flex md:hidden">
+            <button type="button" class="mobile-menu-button p-2 transition-transform">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-          <a href="home.html" class="hover:text-green-600">Home</a>
-          <a href="about.html" class="hover:text-green-600">About</a>
-          <a href="services.html" class="hover:text-green-600">Services</a>
-          <a href="blog.html" class="hover:text-green-600">Blog</a>
-          <a href="contact.html" class="hover:text-green-600">Contact</a>
-          <a
-            href="login.html"
-            class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >Login</a
-          >
-          <a
-            href="registration.html"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500 text-green-500"
-            >Sign Up</a
-          >
+        <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+          <a href="home.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+          <a href="about.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+          <a href="services.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Services</a>
+          <a href="blog.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Blog</a>
+          <a href="contact.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Contact</a>
+          <a href="login.html" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue">Login</a>
+          <a href="registration.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm text-sm font-medium hover:bg-white hover:text-primary-dark-blue transition-colors">Sign Up</a>
         </div>
       </div>
     </nav>
     
-    <!-- Mobile menu -->
-    <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-      <a href="home.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
-      <a href="about.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
-      <a href="services.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Services</a>
-      <a href="blog.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Blog</a>
-      <a href="contact.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Contact</a>
+    <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+      <a href="home.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Home</a>
+      <a href="about.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
+      <a href="services.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Services</a>
+      <a href="blog.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Blog</a>
+      <a href="contact.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Contact</a>
       <div class="mt-4 space-y-3">
-        <a
-          href="login.html"
-          class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
-          >Login</a
-        >
-        <a
-          href="registration.html"
-          class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
-          >Sign Up</a
-        >
+        <a href="login.html" class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue">Login</a>
+        <a href="registration.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50">Sign Up</a>
       </div>
     </div>
   </header>
 
-  <!-- Login Form -->
-  <main class="max-w-md mx-auto px-4 sm:px-6 py-12 w-full flex-1">
-    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-6">
-      <h1 class="text-3xl font-bold text-center">Login to Your Account</h1>
+  <main class="max-w-md mx-auto px-4 sm:px-6 py-12 w-full flex-grow flex items-center">
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg space-y-6 w-full">
+      <h1 class="text-3xl font-bold text-center color-primary-dark-blue">Login to Your Account</h1>
       <form id="loginForm" class="space-y-5">
-        <input id="name" type="text" placeholder="Username" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
-        <input id="email" type="email" placeholder="Email" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
-        <input id="password" type="password" placeholder="Password" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
-        <select id="userType" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500">
-          <option value="">Select your role</option>
+        <input id="name" type="text" placeholder="Username" class="w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
+        <input id="email" type="email" placeholder="Email" required class="w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
+        <input id="password" type="password" placeholder="Password" required class="w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
+        <select id="userType" class="w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm bg-white" required>
+          <option value="" disabled selected>Select your role</option>
           <option value="patient">Patient</option>
           <option value="doctor">Doctor</option>
         </select>
         <div class="flex justify-between items-center text-sm">
           <label class="flex items-center">
-            <input type="checkbox" id="rememberMe" class="mr-2">
+            <input type="checkbox" id="rememberMe" class="mr-2 h-4 w-4 rounded text-primary-dark-blue focus:ring-primary-light-blue">
             Remember Me
           </label>
-          <a href="#" onclick="resetPassword()" class="text-green-600 hover:underline">Forgot Password?</a>
+          <a href="#" onclick="resetPassword()" class="color-primary-dark-blue hover:underline font-medium">Forgot Password?</a>
         </div>
         <p id="loginResponse" class="text-center text-red-600 font-medium"></p>
-        <button type="submit" id="loginButton" class="w-full bg-green-600 text-white font-semibold py-3 rounded-md hover:bg-green-700 transition-colors">Login</button>
+        <button type="submit" id="loginButton" class="w-full btn-primary font-semibold py-3 rounded-lg transition-colors">Login</button>
       </form>
-      <p class="text-center text-sm">Don't have an account? <a href="registration.html" class="text-green-600 hover:underline">Sign Up</a></p>
+      <p class="text-center text-sm">Don't have an account? <a href="registration.html" class="color-primary-dark-blue hover:underline font-medium">Sign Up</a></p>
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="w-full bg-[#0a1e3a] text-slate-300 border-t border-gray-700 py-10 mt-auto">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
-      <div>
-        <img
-          src="very new medicine.jpg"
-          alt="AROYKYA SAHAYAK Logo"
-          class="w-16 h-16 mb-4 rounded-full"
-        />
-        <p class="text-sm leading-relaxed">
-          AROYKYA SAHAYAK helps you track skin progress, get AI insights, and
-          consult top dermatologists—all from your phone.
-        </p>
-      </div>
-      <div>
-        <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="home.html" class="hover:underline">Home</a></li>
-          <li><a href="about.html" class="hover:underline">About Us</a></li>
-          <li>
-            <a href="services.html" class="hover:underline">Our Services</a>
-          </li>
-          <li>
-            <a href="blog.html" class="hover:underline">Skin Tips Blog</a>
-          </li>
-          <li><a href="contact.html" class="hover:underline">Contact</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
-        <p class="text-sm">📍 Tamil Nadu, India</p>
-        <p class="text-sm mt-2">📞 +91 98765 43210</p>
-        <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
-        <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
-      </div>
-      <div>
-        <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
-        <ul class="space-y-2 text-sm mb-4">
-          <li>
-            <a href="privacy.html" class="hover:underline">Privacy Policy</a>
-          </li>
-          <li>
-            <a href="terms.html" class="hover:underline"
-              >Terms & Conditions</a
-            >
-          </li>
-        </ul>
-        <div class="flex space-x-4">
-          <a href="#" class="hover:text-white"
-            ><i class="fab fa-facebook-f"></i
-          ></a>
-          <a href="#" class="hover:text-white"
-            ><i class="fab fa-instagram"></i
-          ></a>
-          <a href="#" class="hover:text-white"
-            ><i class="fab fa-twitter"></i
-          ></a>
-          <a href="#" class="hover:text-white"
-            ><i class="fab fa-linkedin-in"></i
-          ></a>
+  <footer class="footer-bg border-t border-primary-dark-blue py-10 text-white">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+        <div>
+          <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
+            <img src="as.jpg" class="h-full w-full object-cover" alt="AROKYA SAHAYAK Logo">
+          </div>
+          <p class="text-sm leading-relaxed">
+            AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect with top doctors, manage appointments, and get expert medical advice right from your home.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="home.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+            <li><a href="about.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
+            <li><a href="services.html" class="hover:text-primary-light-blue transition-colors">Our Services</a></li>
+            <li><a href="blog.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a></li>
+            <li><a href="contact.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+          <p class="text-sm">📍 Tamil Nadu, India</p>
+          <p class="text-sm mt-2">📞 +91 98765 43210</p>
+          <p class="text-sm mt-2">✉ support@AROKYASAHAYAK.com</p>
+          <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+          <ul class="space-y-2 text-sm mb-4">
+            <li><a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a></li>
+            <li><a href="terms.html" class="hover:text-primary-light-blue transition-colors">Terms & Conditions</a></li>
+          </ul>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-linkedin-in"></i></a>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
-    >
-      © 2025 AROYKYA SAHAYAK. All rights reserved.
-    </div>
+      <div class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6">
+        © 2025 AROKYA SAHAYAK. All rights reserved.
+      </div>
   </footer>
 
-  <!-- Mobile menu toggle functionality -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -213,36 +195,20 @@
       
       mobileMenuButton.addEventListener('click', function() {
         mobileMenu.classList.toggle('active');
-        mobileMenuButton.classList.toggle('active');
-        
-        // Change icon when menu is open/closed
-        const icon = mobileMenuButton.querySelector('svg');
+        this.classList.toggle('active');
+        const icon = this.querySelector('svg');
         if (mobileMenu.classList.contains('active')) {
-          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+          icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
         } else {
-          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-        }
-      });
-      
-      // Close menu when clicking outside
-      document.addEventListener('click', function(event) {
-        const isClickInsideMenu = mobileMenu.contains(event.target);
-        const isClickOnButton = mobileMenuButton.contains(event.target);
-        
-        if (!isClickInsideMenu && !isClickOnButton && mobileMenu.classList.contains('active')) {
-          mobileMenu.classList.remove('active');
-          mobileMenuButton.classList.remove('active');
-          const icon = mobileMenuButton.querySelector('svg');
-          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+          icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
         }
       });
     });
   </script>
 
-  <!-- Updated Firebase Login Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -258,7 +224,6 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Handle Login Submission
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const loginBtn = document.getElementById("loginButton");
@@ -282,41 +247,43 @@
       try {
         const userCred = await signInWithEmailAndPassword(auth, email, password);
         const user = userCred.user;
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
 
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (!userDoc.exists()) throw new Error("User profile not found.");
-
-        const userData = userDoc.data();
+        if (!userDocSnap.exists()) {
+            throw new Error("User profile not found. Please contact support.");
+        }
         
-        // Case-insensitive role check
+        const userData = userDocSnap.data();
         if (userData.role.toLowerCase() !== userType.toLowerCase()) {
-          throw new Error(`Please login as a ${userData.role}`);
+          await signOut(auth);
+          throw new Error(`Incorrect role selected. Please log in as a ${userData.role}.`);
         }
 
-        // Store user data in session storage
-        sessionStorage.setItem("username", userData.name || username);//primary storage
+        sessionStorage.setItem("username", userData.name || username);
         sessionStorage.setItem("userRole", userData.role);
         sessionStorage.setItem("userId", user.uid);
         sessionStorage.setItem("userEmail", user.email);
-
-        localStorage.setItem("username", userData.name || username);   // Fallback storage
+        localStorage.setItem("username", userData.name || username);
 
         responseMsg.textContent = "Login successful! Redirecting...";
-        responseMsg.className = "text-center text-green-600 font-medium";
+        responseMsg.className = "color-primary-dark-blue font-medium";
 
         setTimeout(() => {
           const redirectUrl = userData.role.toLowerCase() === "doctor" 
-        ? `doctordashboard.html?name=${encodeURIComponent(userData.name || username)}`
-        : `patient.html?name=${encodeURIComponent(userData.name || username)}`;
+            ? `doctordashboard.html?name=${encodeURIComponent(userData.name || username)}`
+            : `patient.html?name=${encodeURIComponent(userData.name || username)}`;
           window.location.href = redirectUrl;
         }, 1000);
 
       } catch (error) {
-        console.error("Login Error:", error.message);
-        let errorMsg = "Login failed. Please try again.";
-        if (error.code === "auth/user-not-found") errorMsg = "User not found.";
-        else if (error.code === "auth/wrong-password") errorMsg = "Incorrect password.";
-        else if (error.message) errorMsg = error.message;
+        console.error("Login Error:", error);
+        let errorMsg = "Login failed. Please check your credentials.";
+        if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+          errorMsg = "Invalid email or password.";
+        } else if (error.message) {
+          errorMsg = error.message;
+        }
 
         responseMsg.textContent = errorMsg;
         loginBtn.disabled = false;
@@ -324,25 +291,16 @@
       }
     });
 
-    // Password Reset
     window.resetPassword = async function() {
-      const email = prompt("Enter your email to reset password:");
+      const email = prompt("Please enter your email to receive a password reset link:");
       if (email) {
         try {
           await sendPasswordResetEmail(auth, email);
-          alert("Password reset email sent. Check your inbox.");
+          alert("Password reset email sent. Please check your inbox (and spam folder).");
         } catch (error) {
-          alert("Error: " + error.message);
+          alert("Error sending reset email: " + error.message);
         }
       }
-    }
-
-    // Logout function
-    window.logout = async function() {
-      await signOut(auth);
-      localStorage.removeItem("manualLogin");
-      sessionStorage.clear();
-      window.location.href = "login.html";
     }
   </script>
 </body>

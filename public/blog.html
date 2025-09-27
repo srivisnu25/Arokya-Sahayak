@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Skin Tips Blog | AROKYA SAHAYAK</title>
+    <title>Health & Wellness Blog | AROKYA SAHAYAK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -17,6 +17,27 @@
       body {
         font-family: "Inter", sans-serif;
       }
+      /* Custom colors */
+      .color-primary-dark-blue { color: #01579B; }
+      .bg-primary-dark-blue { background-color: #01579B; }
+      .border-primary-dark-blue { border-color: #01579B; }
+
+      .color-primary-light-blue { color: #00AEEF; }
+      .bg-primary-light-blue { background-color: #00AEEF; }
+      .border-primary-light-blue { border-color: #00AEEF; }
+
+      /* Component styles */
+      .header-bg { background-color: #01579B; }
+      .footer-bg { background-color: #01579B; }
+      
+      .blog-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .blog-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      }
+      
       .btn-scale {
         transition: transform 0.3s ease;
         display: inline-block;
@@ -38,297 +59,181 @@
         display: block;
         max-height: 500px;
       }
-      .mobile-menu-button {
-        transition: transform 0.3s ease;
-      }
       .mobile-menu-button.active {
         transform: rotate(90deg);
       }
     </style>
   </head>
 
-  <body class="bg-[#f3f9ff] text-slate-900">
-    <!-- Header -->
-    <header class="bg-white shadow sticky top-0 z-50">
-      <nav
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16"
-      >
+  <body class="bg-white text-gray-800">
+    <header class="header-bg shadow sticky top-0 z-50 text-white">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <div class="flex items-center justify-between w-full">
           <a href="home.html" class="flex items-center space-x-3">
-            <img
-              src="very new medicine.jpg"
-              class="h-10 w-10 md:h-12 md:w-12 rounded-full"
-              alt="AROKYA SAHAYAK Logo"
-            />
-            <span class="font-extrabold text-slate-900 text-base md:text-lg">AROKYA SAHAYAK</span>
+            <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo">
+            <span class="font-extrabold text-base md:text-lg">AROKYA SAHAYAK</span>
           </a>
           
-          <!-- Desktop Navigation -->
-          <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-            <a href="home.html" class="hover:text-green-600">Home</a>
-            <a href="about.html" class="hover:text-green-600">About</a>
-            <a href="services.html" class="hover:text-green-600">Services</a>
-            <a href="blog.html" class="hover:text-green-600 text-green-500">Blog</a>
-            <a href="contact.html" class="hover:text-green-600">Contact</a>
-            <a
-              href="login.html"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >Login</a
-            >
-            <a
-              href="registration.html"
-              class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >Sign Up</a
-            >
+          <div class="flex items-center">
+            <div class="flex md:hidden">
+              <button type="button" class="mobile-menu-button p-2 transition-transform">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </button>
+            </div>
           </div>
           
-          <!-- Mobile menu button -->
-          <div class="flex md:hidden">
-            <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </button>
+          <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+            <a href="home.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+            <a href="about.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+            <a href="services.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Services</a>
+            <a href="blog.html" class="bg-primary-dark-blue px-3 py-2 rounded-md font-semibold">Blog</a>
+            <a href="contact.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Contact</a>
+            <a href="login.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm text-sm font-medium hover:bg-white hover:text-primary-dark-blue transition-colors">Login</a>
+            <a href="registration.html" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue focus:ring-2 focus:ring-offset-2 focus:ring-primary-light-blue transition-colors">Sign Up</a>
           </div>
         </div>
       </nav>
       
-      <!-- Mobile menu -->
-      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-        <a href="home.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
-        <a href="about.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
-        <a href="services.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Services</a>
-        <a href="blog.html" class="block py-3 text-green-500 border-b border-gray-100">Blog</a>
-        <a href="contact.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Contact</a>
+      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+        <a href="home.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Home</a>
+        <a href="about.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
+        <a href="services.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Services</a>
+        <a href="blog.html" class="block py-3 text-primary-dark-blue font-semibold border-b border-gray-100">Blog</a>
+        <a href="contact.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Contact</a>
         <div class="mt-4 space-y-3">
-          <a
-            href="login.html"
-            class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
-            >Login</a
-          >
-          <a
-            href="registration.html"
-            class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
-            >Sign Up</a
-          >
+          <a href="login.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50">Login</a>
+          <a href="registration.html" class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors">Sign Up</a>
         </div>
       </div>
     </header>
 
-    <!-- Blog Section -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 class="text-4xl font-extrabold text-center mb-4">Skin Tips</h1>
-      <p class="text-center text-slate-600 mb-12">
-        Your trusted source for the latest skincare tips, routines, and
-        AI-powered insights.
-      </p>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section class="text-center mb-16">
+        <h1 class="text-4xl font-extrabold color-primary-dark-blue mb-4">Health & Wellness Blog</h1>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          Your trusted source for the latest health tips, wellness advice, and medical insights from our experts.
+        </p>
+      </section>
 
       <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <!-- Blog Card 1 -->
-        <article
-          class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300"
-        >
-          <img
-            class="rounded-lg mb-4 w-full h-60 object-cover"
-            src="https://static.vecteezy.com/system/resources/thumbnails/044/575/690/small/woman-applying-sunscreen-on-her-cheek-in-focus-skin-care-concept-image-photo.jpg"
-            alt="Morning Skincare Routine"
-          />
-          <h2 class="font-bold text-lg mb-2">
-            Morning Routine: Start Your Day with Radiant Skin
-          </h2>
-          <p class="text-sm text-slate-600 mb-4">
-            Discover the essential steps for a refreshing morning routine and
-            how to protect your skin from pollution and UV rays.
+        <article class="bg-gray-50 rounded-xl shadow-sm p-6 blog-card flex flex-col">
+          <img class="rounded-lg mb-4 w-full h-52 object-cover" src="https://images.unsplash.com/photo-1528720202772-63b8d515a863?q=80&w=2940&auto=format&fit=crop" alt="Healthy morning breakfast"/>
+          <h2 class="font-bold text-lg mb-2 text-gray-900 flex-grow">5 Tips for a Healthy Morning Routine</h2>
+          <p class="text-sm text-gray-600 mb-4">
+            Learn how to kickstart your day with simple, effective habits for better energy, focus, and overall well-being.
           </p>
-          <a href="#" class="text-green-600 font-medium hover:underline"
-            >Read More →</a
-          >
+          <a href="#" class="color-primary-dark-blue font-semibold hover:underline mt-auto">Read More →</a>
         </article>
 
-        <!-- Blog Card 2 -->
-        <article
-          class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300"
-        >
-          <img
-            class="rounded-lg mb-4 w-full h-60 object-cover"
-            src="https://jerichoskincare.com.au/cdn/shop/articles/night_skin_routine.jpg?v=1718686710"
-            alt="Nighttime Skincare"
-          />
-          <h2 class="font-bold text-lg mb-2">
-            Night Skincare Ritual: Heal & Hydrate While You Sleep
-          </h2>
-          <p class="text-sm text-slate-600 mb-4">
-            Learn why nighttime skincare is crucial and the top ingredients to
-            include for overnight recovery.
+        <article class="bg-gray-50 rounded-xl shadow-sm p-6 blog-card flex flex-col">
+          <img class="rounded-lg mb-4 w-full h-52 object-cover" src="https://images.unsplash.com/photo-1595015883995-97e3a9b18363?q=80&w=2940&auto=format&fit=crop" alt="Person sleeping peacefully"/>
+          <h2 class="font-bold text-lg mb-2 text-gray-900 flex-grow">The Importance of Sleep for Your Overall Health</h2>
+          <p class="text-sm text-gray-600 mb-4">
+            Discover how quality sleep impacts everything from your immune system to mental clarity, and get tips for a more restful night.
           </p>
-          <a href="#" class="text-green-600 font-medium hover:underline"
-            >Read More →</a
-          >
+          <a href="#" class="color-primary-dark-blue font-semibold hover:underline mt-auto">Read More →</a>
         </article>
 
-        <!-- Blog Card 3 -->
-        <article
-          class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300"
-        >
-          <img
-            class="rounded-lg mb-4 w-full h-60 object-cover"
-            src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?cs=srgb&dl=pexels-karolina-grabowska-4041392.jpg&fm=jpg"
-            alt="AI Skin Analysis"
-          />
-          <h2 class="font-bold text-lg mb-2">
-            How AI Helps Track Your Skin Progress
-          </h2>
-          <p class="text-sm text-slate-600 mb-4">
-            Understand the power of AI in identifying skin improvements, blemish
-            reduction, and maintaining long-term skincare goals.
+        <article class="bg-gray-50 rounded-xl shadow-sm p-6 blog-card flex flex-col">
+          <img class="rounded-lg mb-4 w-full h-52 object-cover" src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2940&auto=format&fit=crop" alt="Doctor reviewing medical data on a tablet"/>
+          <h2 class="font-bold text-lg mb-2 text-gray-900 flex-grow">Understanding Telemedicine: The Future of Healthcare</h2>
+          <p class="text-sm text-gray-600 mb-4">
+            Explore how virtual consultations work, their benefits, and how technology is making quality healthcare more accessible than ever.
           </p>
-          <a href="#" class="text-green-600 font-medium hover:underline"
-            >Read More →</a
-          >
+          <a href="#" class="color-primary-dark-blue font-semibold hover:underline mt-auto">Read More →</a>
         </article>
 
-        <!-- Blog Card 4 -->
-        <article
-          class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300"
-        >
-          <img
-            class="rounded-lg mb-4 w-full h-60 object-cover"
-            src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1000"
-            alt="Acne Treatment"
-          />
-          <h2 class="font-bold text-lg mb-2">
-            Effective Acne Treatments: What Really Works
-          </h2>
-          <p class="text-sm text-slate-600 mb-4">
-            Explore the most effective treatments for acne and how to prevent breakouts with proper skincare routines.
+        <article class="bg-gray-50 rounded-xl shadow-sm p-6 blog-card flex flex-col">
+          <img class="rounded-lg mb-4 w-full h-52 object-cover" src="https://images.unsplash.com/photo-1598200020813-c8a77d745e38?q=80&w=2940&auto=format&fit=crop" alt="Person meditating outdoors"/>
+          <h2 class="font-bold text-lg mb-2 text-gray-900 flex-grow">Managing Stress for a Healthier Life</h2>
+          <p class="text-sm text-gray-600 mb-4">
+            Learn practical, evidence-based techniques to manage daily stress, reduce anxiety, and improve your mental resilience.
           </p>
-          <a href="#" class="text-green-600 font-medium hover:underline"
-            >Read More →</a
-          >
+          <a href="#" class="color-primary-dark-blue font-semibold hover:underline mt-auto">Read More →</a>
         </article>
 
-        <!-- Blog Card 5 -->
-        <article
-          class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300"
-        >
-          <img
-            class="rounded-lg mb-4 w-full h-60 object-cover"
-            src="https://media.post.rvohealth.io/wp-content/uploads/2020/09/healthy-foods-for-skin-732x549-thumbnail.jpg"
-            alt="Nutrition for Skin"
-          />
-          <h2 class="font-bold text-lg mb-2">
-            Nutrition for Glowing Skin: Foods That Make a Difference
-          </h2>
-          <p class="text-sm text-slate-600 mb-4">
-            Discover which foods can help improve your skin's health and appearance from the inside out.
+        <article class="bg-gray-50 rounded-xl shadow-sm p-6 blog-card flex flex-col">
+          <img class="rounded-lg mb-4 w-full h-52 object-cover" src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=2940&auto=format&fit=crop" alt="Array of healthy foods"/>
+          <h2 class="font-bold text-lg mb-2 text-gray-900 flex-grow">Eating for Energy: Foods That Fuel Your Body</h2>
+          <p class="text-sm text-gray-600 mb-4">
+            Discover the best foods to boost your energy levels naturally and learn how a balanced diet can impact your daily performance.
           </p>
-          <a href="#" class="text-green-600 font-medium hover:underline"
-            >Read More →</a
-          >
+          <a href="#" class="color-primary-dark-blue font-semibold hover:underline mt-auto">Read More →</a>
         </article>
 
-        <!-- Blog Card 6 -->
-        <article
-          class="bg-white rounded-xl shadow p-6 hover:shadow-lg transition duration-300"
-        >
-          <img
-            class="rounded-lg mb-4 w-full h-60 object-cover"
-            src="https://www.sknclinics.co.uk/wp-content/uploads/2023/06/Untitled-design-2023-06-09T115006.711.jpg"
-            alt="Seasonal Skincare"
-          />
-          <h2 class="font-bold text-lg mb-2">
-            Seasonal Skincare: Adapting Your Routine Throughout the Year
-          </h2>
-          <p class="text-sm text-slate-600 mb-4">
-            Learn how to adjust your skincare regimen with changing seasons to keep your skin healthy year-round.
+        <article class="bg-gray-50 rounded-xl shadow-sm p-6 blog-card flex flex-col">
+          <img class="rounded-lg mb-4 w-full h-52 object-cover" src="https://images.unsplash.com/photo-1586724237569-3a042a3a1f3c?q=80&w=2940&auto=format&fit=crop" alt="Person doing yoga at home"/>
+          <h2 class="font-bold text-lg mb-2 text-gray-900 flex-grow">Simple Exercises You Can Do at Home</h2>
+          <p class="text-sm text-gray-600 mb-4">
+            No gym? No problem. Explore a variety of simple yet effective exercises you can do from the comfort of your home to stay active.
           </p>
-          <a href="#" class="text-green-600 font-medium hover:underline"
-            >Read More →</a
-          >
+          <a href="#" class="color-primary-dark-blue font-semibold hover:underline mt-auto">Read More →</a>
         </article>
       </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full bg-[#0a1e3a] py-10 text-slate-300">
+    <footer class="footer-bg border-t border-primary-dark-blue py-10 text-white mt-16">
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
         <div>
           <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
-            <img
-              src="very new medicine.jpg"
-              class="h-full w-full object-cover"
-              alt="AROKYA SAHAYAK Logo"
-            />
+            <img src="as.jpg" class="h-full w-full object-cover" alt="AROKYA SAHAYAK Logo">
           </div>
-          <p class="text-sm">
-            AROKYA SAHAYAK brings AI-powered dermatology insights to your
-            fingertips.
+          <p class="text-sm leading-relaxed">
+            AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect with top doctors, manage appointments, and get expert medical advice right from your home.
           </p>
         </div>
         <div>
-          <h3 class="text-white font-bold mb-3">Quick Links</h3>
+          <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
           <ul class="space-y-2 text-sm">
-            <li><a href="home.html" class="hover:underline">Home</a></li>
-            <li><a href="about.html" class="hover:underline">About Us</a></li>
-            <li>
-              <a href="services.html" class="hover:underline">Services</a>
-            </li>
-            <li><a href="blog.html" class="hover:underline">Skin Tips Blog</a></li>
-            <li><a href="contact.html" class="hover:underline">Contact</a></li>
+            <li><a href="home.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+            <li><a href="about.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
+            <li><a href="services.html" class="hover:text-primary-light-blue transition-colors">Our Services</a></li>
+            <li><a href="blog.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a></li>
+            <li><a href="contact.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
           </ul>
         </div>
         <div>
-          <h3 class="text-white font-bold mb-3">Contact</h3>
+          <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
           <p class="text-sm">📍 Tamil Nadu, India</p>
-          <p class="text-sm">📧 support@AROKYA SAHAYAK.com</p>
-          <p class="text-sm">📞 +91 98765 43210</p>
+          <p class="text-sm mt-2">📞 +91 98765 43210</p>
+          <p class="text-sm mt-2">✉ support@AROKYASAHAYAK.com</p>
+          <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
         </div>
         <div>
-          <h3 class="text-white font-bold mb-3">Follow Us</h3>
+          <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+          <ul class="space-y-2 text-sm mb-4">
+            <li><a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a></li>
+            <li><a href="terms.html" class="hover:text-primary-light-blue transition-colors">Terms & Conditions</a></li>
+          </ul>
           <div class="flex space-x-4">
-            <a href="#" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="hover:text-white"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-linkedin-in"></i></a>
           </div>
         </div>
       </div>
-      <div class="text-center text-sm mt-8 text-slate-400">
+      <div class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6">
         © 2025 AROKYA SAHAYAK. All rights reserved.
       </div>
     </footer>
 
     <script>
       // Mobile menu toggle functionality
-      document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.querySelector('.mobile-menu-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
+      document.querySelector('.mobile-menu-button').addEventListener('click', function() {
+        const menu = document.querySelector('.mobile-menu');
+        const button = this;
+        menu.classList.toggle('active');
+        button.classList.toggle('active');
         
-        mobileMenuButton.addEventListener('click', function() {
-          mobileMenu.classList.toggle('active');
-          mobileMenuButton.classList.toggle('active');
-          
-          // Change icon when menu is open/closed
-          const icon = mobileMenuButton.querySelector('svg');
-          if (mobileMenu.classList.contains('active')) {
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-          } else {
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-          }
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-          const isClickInsideMenu = mobileMenu.contains(event.target);
-          const isClickOnButton = mobileMenuButton.contains(event.target);
-          
-          if (!isClickInsideMenu && !isClickOnButton && mobileMenu.classList.contains('active')) {
-            mobileMenu.classList.remove('active');
-            mobileMenuButton.classList.remove('active');
-            const icon = mobileMenuButton.querySelector('svg');
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-          }
-        });
+        const icon = button.querySelector('svg');
+        if (menu.classList.contains('active')) {
+          icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
+        } else {
+          icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+        }
       });
     </script>
   </body>

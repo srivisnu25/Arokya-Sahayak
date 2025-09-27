@@ -17,10 +17,41 @@
       body {
         font-family: "Inter", sans-serif;
       }
-      .contact-card:hover {
-        transform: scale(1.02);
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      /* Custom colors */
+      .color-primary-dark-blue { color: #01579B; }
+      .bg-primary-dark-blue { background-color: #01579B; }
+      .border-primary-dark-blue { border-color: #01579B; }
+
+      .color-primary-light-blue { color: #00AEEF; }
+      .bg-primary-light-blue { background-color: #00AEEF; }
+      .border-primary-light-blue { border-color: #00AEEF; }
+
+      /* Component styles */
+      .header-bg { background-color: #01579B; }
+      .footer-bg { background-color: #01579B; }
+      
+      .btn-primary {
+        background-color: #00AEEF;
+        color: white;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #008fcc;
+      }
+      .btn-primary:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.5);
+      }
+      
+      .btn-scale {
+        transition: transform 0.3s ease;
+        display: inline-block;
+      }
+      .btn-scale:hover,
+      .btn-scale:focus {
+        transform: scale(1.05);
+        outline: none;
       }
       
       /* Mobile menu styles */
@@ -34,295 +65,180 @@
         display: block;
         max-height: 500px;
       }
-      .mobile-menu-button {
-        transition: transform 0.3s ease;
-      }
       .mobile-menu-button.active {
         transform: rotate(90deg);
       }
     </style>
   </head>
 
-  <body class="bg-[#f3f9ff] text-slate-900">
-    <!-- Header -->
-    <header class="border-b border-gray-200 bg-white sticky top-0 z-50">
-      <nav
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16"
-      >
+  <body class="bg-white text-gray-800">
+    <header class="header-bg shadow sticky top-0 z-50 text-white">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <div class="flex items-center justify-between w-full">
           <a href="home.html" class="flex items-center space-x-3">
-            <img
-              src="very new medicine.jpg"
-              class="h-10 w-10 md:h-12 md:w-12 rounded-full"
-              alt="AROKYA SAHAYAK Logo"
-            />
-            <span class="font-extrabold text-slate-900 text-base md:text-lg">AROKYA SAHAYAK</span>
+            <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo">
+            <span class="font-extrabold text-base md:text-lg">AROKYA SAHAYAK</span>
           </a>
           
-          <!-- Mobile menu button -->
-          <div class="flex md:hidden">
-            <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </button>
+          <div class="flex items-center">
+            <div class="flex md:hidden">
+              <button type="button" class="mobile-menu-button p-2 transition-transform">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </button>
+            </div>
           </div>
           
-          <!-- Desktop Navigation -->
-          <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-            <a href="home.html" class="hover:text-green-600">Home</a>
-            <a href="about.html" class="hover:text-green-600">About</a>
-            <a href="services.html" class="hover:text-green-600">Services</a>
-            <a href="blog.html" class="hover:text-green-600">Blog</a>
-            <a href="contact.html" class="hover:text-green-600 text-green-500">Contact</a>
-            <a
-              href="login.html"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >Login</a
-            >
-            <a
-              href="registration.html"
-              class="inline-flex items-center px-4 py-2 rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
-              >Sign Up</a
-            >
+          <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+            <a href="home.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+            <a href="about.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+            <a href="services.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Services</a>
+            <a href="blog.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Blog</a>
+            <a href="contact.html" class="bg-primary-dark-blue px-3 py-2 rounded-md font-semibold">Contact</a>
+            <a href="login.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm text-sm font-medium hover:bg-white hover:text-primary-dark-blue transition-colors">Login</a>
+            <a href="registration.html" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue focus:ring-2 focus:ring-offset-2 focus:ring-primary-light-blue transition-colors">Sign Up</a>
           </div>
         </div>
       </nav>
       
-      <!-- Mobile menu -->
-      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-        <a href="home.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
-        <a href="about.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
-        <a href="services.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Services</a>
-        <a href="blog.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Blog</a>
-        <a href="contact.html" class="block py-3 text-green-500 border-b border-gray-100">Contact</a>
+      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+        <a href="home.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Home</a>
+        <a href="about.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
+        <a href="services.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Services</a>
+        <a href="blog.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Blog</a>
+        <a href="contact.html" class="block py-3 text-primary-dark-blue font-semibold border-b border-gray-100">Contact</a>
         <div class="mt-4 space-y-3">
-          <a
-            href="login.html"
-            class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
-            >Login</a
-          >
-          <a
-            href="registration.html"
-            class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
-            >Sign Up</a
-          >
+          <a href="login.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50">Login</a>
+          <a href="registration.html" class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors">Sign Up</a>
         </div>
       </div>
     </header>
 
-    <!-- Contact Section -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 class="text-4xl font-extrabold text-center text-[#0a1e3a] mb-6">
-        Contact Us
-      </h1>
-      <p class="text-center text-slate-600 mb-12 max-w-3xl mx-auto">
-        Have a question or need assistance? Reach out to us anytime — we're here
-        to help with your skincare journey!
-      </p>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section class="text-center mb-16">
+        <h1 class="text-4xl font-extrabold color-primary-dark-blue mb-4">
+          Get In Touch
+        </h1>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          Have a question or need assistance? Our team is ready to help. Reach out to us through the form below or using our contact details.
+        </p>
+      </section>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <!-- Contact Form -->
-        <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
-          <h2 class="text-2xl font-bold mb-4 text-slate-900">
-            Send Us a Message
-          </h2>
+        <div class="bg-gray-50 rounded-xl shadow-sm p-6 md:p-8">
+          <h2 class="text-2xl font-bold mb-6 text-gray-900">Send Us a Message</h2>
           <form action="#" method="POST" class="space-y-5">
             <div>
-              <label class="block text-sm font-medium text-slate-700"
-                >Name</label
-              >
-              <input
-                type="text"
-                name="name"
-                required
-                placeholder="Your Name"
-                class="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
-              />
+              <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+              <input type="text" id="name" name="name" required placeholder="Your Name" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-light-blue focus:border-primary-light-blue"/>
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700"
-                >Email</label
-              >
-              <input
-                type="email"
-                name="email"
-                required
-                placeholder="you@example.com"
-                class="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
-              />
+              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input type="email" id="email" name="email" required placeholder="you@example.com" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-light-blue focus:border-primary-light-blue"/>
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700"
-                >Message</label
-              >
-              <textarea
-                name="message"
-                rows="5"
-                required
-                placeholder="How can we help you?"
-                class="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500"
-              ></textarea>
+              <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+              <textarea id="message" name="message" rows="5" required placeholder="How can we help you?" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-primary-light-blue focus:border-primary-light-blue"></textarea>
             </div>
-            <button
-              type="submit"
-              class="w-full bg-green-600 text-white font-semibold py-3 rounded-md hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
+            <button type="submit" class="w-full btn-primary font-semibold py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light-blue">
               Send Message
             </button>
           </form>
         </div>
 
-        <!-- Contact Info -->
-        <div class="bg-white rounded-xl shadow-sm p-6 md:p-8 space-y-6 contact-card">
-          <h2 class="text-2xl font-bold text-slate-900 mb-4">
-            Reach Us Directly
-          </h2>
-          <div class="space-y-4 text-slate-700 text-sm">
-            <p class="flex items-center">
-              <i class="fas fa-map-marker-alt text-green-600 mr-3"></i> 
-              <span>Tamil Nadu, India</span>
-            </p>
-            <p class="flex items-center">
-              <i class="fas fa-phone text-green-600 mr-3"></i> 
-              <span>+91 98765 43210</span>
-            </p>
-            <p class="flex items-center">
-              <i class="fas fa-envelope text-green-600 mr-3"></i>
-              <span>support@AROKYA SAHAYAK.com</span>
-            </p>
-            <p class="flex items-center">
-              <i class="fas fa-clock text-green-600 mr-3"></i> 
-              <span>Mon - Fri: 9 AM - 6 PM</span>
-            </p>
+        <div class="bg-gray-50 rounded-xl shadow-sm p-6 md:p-8 space-y-6">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Reach Us Directly</h2>
+          <div class="space-y-5 text-gray-700">
+            <div class="flex items-start">
+              <i class="fas fa-map-marker-alt color-primary-dark-blue text-xl mt-1 w-6"></i>
+              <span class="ml-3">Tamil Nadu, India</span>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-phone color-primary-dark-blue text-xl mt-1 w-6"></i>
+              <span class="ml-3">+91 98765 43210</span>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-envelope color-primary-dark-blue text-xl mt-1 w-6"></i>
+              <span class="ml-3">support@AROKYASAHAYAK.com</span>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-clock color-primary-dark-blue text-xl mt-1 w-6"></i>
+              <span class="ml-3">Mon - Fri: 9 AM - 6 PM</span>
+            </div>
           </div>
-          <div class="flex space-x-4 pt-4">
-            <a href="#" class="hover:text-green-600"
-              ><i class="fab fa-facebook-f text-2xl"></i
-            ></a>
-            <a href="#" class="hover:text-green-600"
-              ><i class="fab fa-instagram text-2xl"></i
-            ></a>
-            <a href="#" class="hover:text-green-600"
-              ><i class="fab fa-twitter text-2xl"></i
-            ></a>
-            <a href="#" class="hover:text-green-600"
-              ><i class="fab fa-linkedin-in text-2xl"></i
-            ></a>
+          <div class="border-t border-gray-200 my-6"></div>
+          <h3 class="text-lg font-semibold text-gray-800">Follow Us</h3>
+          <div class="flex space-x-4 pt-2">
+            <a href="#" class="text-gray-500 hover:color-primary-dark-blue transition-colors"><i class="fab fa-facebook-f text-2xl"></i></a>
+            <a href="#" class="text-gray-500 hover:color-primary-dark-blue transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+            <a href="#" class="text-gray-500 hover:color-primary-dark-blue transition-colors"><i class="fab fa-twitter text-2xl"></i></a>
+            <a href="#" class="text-gray-500 hover:color-primary-dark-blue transition-colors"><i class="fab fa-linkedin-in text-2xl"></i></a>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- Footer -->
-    <footer
-      class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
-    >
+    <footer class="footer-bg border-t border-primary-dark-blue py-10 text-white mt-16">
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
         <div>
           <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
-            <img
-              src="very new medicine.jpg"
-              class="h-full w-full object-cover"
-              alt="AROKYA SAHAYAK Logo"
-            />
+            <img src="as.jpg" class="h-full w-full object-cover" alt="AROKYA SAHAYAK Logo">
           </div>
           <p class="text-sm leading-relaxed">
-            AROKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
-            skin progress, get tips, and consult top dermatologists from the
-            comfort of your home.
+            AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect with top doctors, manage appointments, and get expert medical advice right from your home.
           </p>
         </div>
-
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
           <ul class="space-y-2 text-sm">
-            <li><a href="home.html" class="hover:underline">Home</a></li>
-            <li><a href="about.html" class="hover:underline">About Us</a></li>
-            <li>
-              <a href="services.html" class="hover:underline">Our Services</a>
-            </li>
-            <li>
-              <a href="blog.html" class="hover:underline">Skin Tips Blog</a>
-            </li>
-            <li><a href="contact.html" class="hover:underline">Contact</a></li>
+            <li><a href="home.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+            <li><a href="about.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
+            <li><a href="services.html" class="hover:text-primary-light-blue transition-colors">Our Services</a></li>
+            <li><a href="blog.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a></li>
+            <li><a href="contact.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
           </ul>
         </div>
-
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
           <p class="text-sm">📍 Tamil Nadu, India</p>
           <p class="text-sm mt-2">📞 +91 98765 43210</p>
-          <p class="text-sm mt-2">✉️ support@AROKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">✉ support@AROKYASAHAYAK.com</p>
           <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
         </div>
-
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
           <ul class="space-y-2 text-sm mb-4">
-            <li>
-              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
-            </li>
-            <li>
-              <a href="terms.html" class="hover:underline"
-                >Terms & Conditions</a
-              >
-            </li>
+            <li><a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a></li>
+            <li><a href="terms.html" class="hover:text-primary-light-blue transition-colors">Terms & Conditions</a></li>
           </ul>
           <div class="flex space-x-4">
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-facebook-f"></i
-            ></a>
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-instagram"></i
-            ></a>
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-twitter"></i
-            ></a>
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-linkedin-in"></i
-            ></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-linkedin-in"></i></a>
           </div>
         </div>
       </div>
-      <div
-        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
-      >
+      <div class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6">
         © 2025 AROKYA SAHAYAK. All rights reserved.
       </div>
     </footer>
 
     <script>
       // Mobile menu toggle functionality
-      document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.querySelector('.mobile-menu-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
+      document.querySelector('.mobile-menu-button').addEventListener('click', function() {
+        const menu = document.querySelector('.mobile-menu');
+        const button = this;
+        menu.classList.toggle('active');
+        button.classList.toggle('active');
         
-        mobileMenuButton.addEventListener('click', function() {
-          mobileMenu.classList.toggle('active');
-          mobileMenuButton.classList.toggle('active');
-          
-          // Change icon when menu is open/closed
-          const icon = mobileMenuButton.querySelector('svg');
-          if (mobileMenu.classList.contains('active')) {
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-          } else {
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-          }
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-          const isClickInsideMenu = mobileMenu.contains(event.target);
-          const isClickOnButton = mobileMenuButton.contains(event.target);
-          
-          if (!isClickInsideMenu && !isClickOnButton && mobileMenu.classList.contains('active')) {
-            mobileMenu.classList.remove('active');
-            mobileMenuButton.classList.remove('active');
-            const icon = mobileMenuButton.querySelector('svg');
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-          }
-        });
+        const icon = button.querySelector('svg');
+        if (menu.classList.contains('active')) {
+          icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
+        } else {
+          icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+        }
       });
     </script>
   </body>
