@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Skin Streak Tracker | AROYKYA SAHAYAK</title>
+    <title>Streak Tracker | AROKYA SAHAYAK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -13,19 +13,24 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <style>
+      /* Custom colors from home.html */
+      .color-primary-dark-blue { color: #01579B; }
+      .bg-primary-dark-blue { background-color: #01579B; }
+      .color-primary-light-blue { color: #00AEEF; }
+      .bg-primary-light-blue { background-color: #00AEEF; }
       .badge {
-        background: linear-gradient(135deg, #18df61, #18df61);
+        background: linear-gradient(135deg, #00AEEF, #01579B);
         color: white;
         padding: 4px 12px;
         border-radius: 9999px;
         font-size: 0.75rem;
         font-weight: 600;
-        box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+        box-shadow: 0 2px 6px rgba(0, 174, 239, 0.3);
       }
       .loading-spinner {
         border: 4px solid rgba(0, 0, 0, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #10b981;
+        border-top: 4px solid #01579B;
         width: 40px;
         height: 40px;
         animation: spin 1s linear infinite;
@@ -58,32 +63,30 @@
       }
     </style>
   </head>
-  <body class="text-slate-900 flex flex-col">
+  <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
     <div id="header-container"></div>
-
     <main class="flex-grow">
       <section class="max-w-7xl mx-auto px-6 py-10">
         <div
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6"
         >
           <div>
-            <h1 class="text-3xl sm:text-4xl font-bold text-green-600" id="pageTitle">
-              🌿 Your Skin Streak
+            <h1 class="text-3xl sm:text-4xl font-bold color-primary-dark-blue" id="pageTitle">
+              🩺 Your Health Streak
             </h1>
-            <p class="text-slate-600 mt-1" id="pageSubtitle">
-              Track your daily skincare journey with detailed entries and visual
+            <p class="text-gray-600 mt-1" id="pageSubtitle">
+              Track your daily health journey with detailed entries and visual
               progress.
             </p>
           </div>
           <a
             href="imageupload.html"
             id="uploadButton"
-            class="mt-4 sm:mt-0 inline-flex items-center px-5 py-2 rounded-md text-white bg-green-600 hover:bg-green-700 text-sm font-semibold shadow"
+            class="mt-4 sm:mt-0 inline-flex items-center px-5 py-2 rounded-md text-white bg-primary-light-blue hover:bg-primary-dark-blue text-sm font-semibold shadow transition-colors"
           >
             <i class="fas fa-upload mr-2"></i> Upload
           </a>
         </div>
-
         <div class="permission-help p-4 mb-6 rounded-md hidden">
           <h3 class="font-bold text-amber-700 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Firebase Configuration Required</h3>
           <p class="text-amber-800 text-sm">To view your streaks, you need to update your Firebase security rules to allow read access to your data.</p>
@@ -91,24 +94,19 @@
             How to fix this
           </button>
         </div>
-
         <div id="loadingIndicator" class="loading-spinner my-8"></div>
-        
         <div
           id="streakContainer"
           class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         ></div>
       </section>
     </main>
-
     <div id="rulesHelpModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
       <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-        <h3 class="text-xl font-bold text-primary mb-4">Firebase Security Rules Setup</h3>
+        <h3 class="text-xl font-bold color-primary-dark-blue mb-4">Firebase Security Rules Setup</h3>
         <p class="mb-4">The "Missing or insufficient permissions" error means your Firebase security rules need to be updated to allow read access.</p>
-        
         <h4 class="font-bold mt-4 mb-2">Step 1: Open Firebase Console</h4>
-        <p class="mb-4">Go to the <a href="https://console.firebase.google.com/" class="text-green-600 underline" target="_blank">Firebase Console</a>, select your project, then go to Firestore Database > Rules.</p>
-        
+        <p class="mb-4">Go to the <a href="https://console.firebase.google.com/" class="color-primary-dark-blue underline" target="_blank">Firebase Console</a>, select your project, then go to Firestore Database > Rules.</p>
         <h4 class="font-bold mt-4 mb-2">Step 2: Update Your Rules</h4>
         <p class="mb-2">Replace your current rules with these:</p>
         <pre class="bg-gray-100 p-4 rounded overflow-x-auto text-sm mb-4">
@@ -129,90 +127,86 @@ service cloud.firestore {
   }
 }
         </pre>
-        
         <h4 class="font-bold mt-4 mb-2">Step 3: Publish Rules</h4>
         <p class="mb-4">Click "Publish" to save your new rules. They will take effect immediately.</p>
-        
         <div class="flex justify-end">
-          <button id="closeRulesHelp" class="bg-green-600 text-white px-4 py-2 rounded-lg">Got it</button>
+          <button id="closeRulesHelp" class="bg-primary-light-blue text-white px-4 py-2 rounded-lg hover:bg-primary-dark-blue transition-colors">Got it</button>
         </div>
       </div>
     </div>
-
     <footer
-      class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
+      class="w-full bg-primary-dark-blue border-t border-primary-dark-blue py-10 text-white"
     >
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
         <div>
           <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
             <img
-              src="very new medicine.jpg"
+              src="as.jpg"
               class="h-full w-full object-cover"
-              alt="Dermastreak Logo"
+              alt="AROKYA SAHAYAK Logo"
             />
           </div>
           <p class="text-sm leading-relaxed">
-            AROKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
-            skin progress, get tips, and consult top dermatologists from the
-            comfort of your home.
+            AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect
+            with top doctors, manage appointments, and get expert medical advice
+            from the comfort of your home.
           </p>
         </div>
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
           <ul class="space-y-2 text-sm">
-            <li><a href="patient.html" class="hover:underline">Home</a></li>
-            <li><a href="about1.html" class="hover:underline">About Us</a></li>
+            <li><a href="patient.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+            <li><a href="about1.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
             <li>
-              <a href="services1.html" class="hover:underline">Our Services</a>
+              <a href="services1.html" class="hover:text-primary-light-blue transition-colors">Our Services</a>
             </li>
             <li>
-              <a href="blog1.html" class="hover:underline">Skin Tips Blog</a>
+              <a href="blog1.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a>
             </li>
-            <li><a href="contact1.html" class="hover:underline">Contact</a></li>
+            <li><a href="contact1.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
           </ul>
         </div>
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
           <p class="text-sm">📍 Tamil Nadu, India</p>
           <p class="text-sm mt-2">📞 +91 98765 43210</p>
-          <p class="text-sm mt-2">✉ support@AROKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">✉ support@arokyasahayak.com</p>
           <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
         </div>
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
           <ul class="space-y-2 text-sm mb-4">
             <li>
-              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+              <a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a>
             </li>
             <li>
-              <a href="terms.html" class="hover:underline"
+              <a href="terms.html" class="hover:text-primary-light-blue transition-colors"
                 >Terms & Conditions</a
               >
             </li>
           </ul>
           <div class="flex space-x-4">
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-facebook-f"></i
             ></a>
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-instagram"></i
             ></a>
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-twitter"></i
             ></a>
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-linkedin-in"></i
             ></a>
           </div>
         </div>
       </div>
       <div
-        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+        class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6"
       >
-        © 2025 AROYKYA SAHAYAK. All rights reserved.
+        © 2025 AROKYA SAHAYAK. All rights reserved.
       </div>
     </footer>
-
     <script>
       // Firebase configuration
       const firebaseConfig = {
@@ -223,12 +217,10 @@ service cloud.firestore {
         messagingSenderId: "32726012100",
         appId: "1:32726012100:web:b5a2071c3ecea58810b991"
       };
-
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       const auth = firebase.auth();
       const db = firebase.firestore();
-
       // DOM elements
       const headerContainer = document.getElementById("header-container");
       const container = document.getElementById("streakContainer");
@@ -241,14 +233,12 @@ service cloud.firestore {
       const pageSubtitle = document.getElementById('pageSubtitle');
       const uploadButton = document.getElementById('uploadButton');
       const emojiOptions = [
-        "🧼", "🧴", "💧", "✨", "🌸", "🧖", "🧑‍⚕", "📆", "📸", "💊"
+        "🩺", "💊", "💪", "✨", "🌸", "🧑‍⚕️", "📆", "📸", "❤️‍🩹", "👍"
       ];
-
       // Get URL parameters
       const urlParams = new URLSearchParams(window.location.search);
       const patientId = urlParams.get('patientId');
       const patientName = urlParams.get('patientName') ? decodeURIComponent(urlParams.get('patientName')) : null;
-
       // Function to get user role from Firestore
       async function getUserRole(uid) {
         try {
@@ -262,17 +252,14 @@ service cloud.firestore {
           return "patient"; // Default on error
         }
       }
-
       // Function to add event listeners to the navbar
       function initializeNavbarEventListeners() {
         const mobileMenuButton = document.querySelector('.mobile-menu-button');
         const mobileMenu = document.querySelector('.mobile-menu');
-        
         if(mobileMenuButton) {
           mobileMenuButton.addEventListener('click', function() {
             mobileMenu.classList.toggle('active');
             mobileMenuButton.classList.toggle('active');
-            
             const icon = mobileMenuButton.querySelector('svg');
             if (mobileMenu.classList.contains('active')) {
               icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
@@ -281,75 +268,73 @@ service cloud.firestore {
             }
           });
         }
-        
         // Attach logout to both desktop and mobile buttons
         document.getElementById('logoutBtnDesktop')?.addEventListener('click', logout);
         document.getElementById('logoutBtnMobile')?.addEventListener('click', logout);
       }
-
       // Function to render the appropriate header based on user role
       function renderHeader(role) {
         let headerHTML = '';
         if (role === "doctor") {
           headerHTML = `
-            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+            <header class="bg-primary-dark-blue shadow text-white sticky top-0 z-50">
               <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
                 <a href="doctordashboard.html" class="flex items-center space-x-3">
-                  <img src="very new medicine.jpg" class="h-12 w-12 rounded-full" alt="AROKYA SAHAYAK Logo" />
-                  <span class="font-extrabold text-slate-900 text-lg">AROKYA SAHAYAK</span>
+                  <img src="as.jpg" class="h-12 w-12 rounded-full" alt="AROKYA SAHAYAK Logo" />
+                  <span class="font-extrabold text-lg">AROKYA SAHAYAK</span>
                 </a>
-                <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-                  <a href="doctordashboard.html" class="hover:text-green-600">Home</a>
-                  <a href="about2.html" class="hover:text-green-600">About</a>
-                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
-                  <button id="logoutBtnDesktop" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</button>
+                <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+                  <a href="doctordashboard.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+                  <a href="about2.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm hover:bg-white hover:text-primary-dark-blue transition-colors">My Profile</a>
+                  <button id="logoutBtnDesktop" class="inline-flex items-center px-4 py-2 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-blue-800 transition-colors">Log Out</button>
                 </div>
                 <div class="flex md:hidden">
-                  <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+                  <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none p-2">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                   </button>
                 </div>
               </nav>
-              <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-                <a href="doctordashboard.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
-                <a href="about2.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+              <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+                <a href="doctordashboard.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Home</a>
+                <a href="about2.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
                 <div class="mt-4 space-y-3">
-                  <a href="profile.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
-                  <button id="logoutBtnMobile" class="block w-full text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</button>
+                  <a href="profile.html" class="block text-center py-3 border border-gray-300 rounded-md bg-white hover:bg-gray-50">My Profile</a>
+                  <button id="logoutBtnMobile" class="block w-full text-center py-3 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors">Log Out</button>
                 </div>
               </div>
             </header>
           `;
         } else {
           headerHTML = `
-            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+            <header class="bg-primary-dark-blue shadow text-white sticky top-0 z-50">
               <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
                 <a href="patient.html" class="flex items-center space-x-3">
-                  <img src="very new medicine.jpg" class="h-12 w-12 rounded-full" alt="AROKYA SAHAYAK Logo" />
-                  <span class="font-extrabold text-slate-900 text-lg">AROKYA SAHAYAK</span>
+                  <img src="as.jpg" class="h-12 w-12 rounded-full" alt="AROKYA SAHAYAK Logo" />
+                  <span class="font-extrabold text-lg">AROKYA SAHAYAK</span>
                 </a>
-                <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-                  <a href="patient.html" class="hover:text-green-600">Home</a>
-                  <a href="about1.html" class="hover:text-green-600">About</a>
-                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
-                  <button id="logoutBtnDesktop" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</button>
+                <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+                  <a href="patient.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+                  <a href="about1.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm hover:bg-white hover:text-primary-dark-blue transition-colors">My Profile</a>
+                  <button id="logoutBtnDesktop" class="inline-flex items-center px-4 py-2 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-blue-800 transition-colors">Log Out</button>
                 </div>
                 <div class="flex md:hidden">
-                  <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+                  <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none p-2">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                   </button>
                 </div>
               </nav>
-              <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-                <a href="patient.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
-                <a href="about1.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+              <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+                <a href="patient.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Home</a>
+                <a href="about1.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
                 <div class="mt-4 space-y-3">
-                  <a href="profile.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
-                  <button id="logoutBtnMobile" class="block w-full text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</button>
+                  <a href="profile.html" class="block text-center py-3 border border-gray-300 rounded-md bg-white hover:bg-gray-50">My Profile</a>
+                  <button id="logoutBtnMobile" class="block w-full text-center py-3 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors">Log Out</button>
                 </div>
               </div>
             </header>
@@ -359,15 +344,12 @@ service cloud.firestore {
         // IMPORTANT: Initialize event listeners AFTER the header is rendered
         initializeNavbarEventListeners();
       }
-
       function getRandomEmoji() {
         return emojiOptions[Math.floor(Math.random() * emojiOptions.length)];
       }
-
       // Format date from Firebase timestamp
       function formatFirebaseDate(timestamp) {
         if (!timestamp || !timestamp.toDate) return 'No date';
-        
         const date = timestamp.toDate();
         return date.toLocaleDateString('en-US', {
           year: 'numeric',
@@ -375,72 +357,59 @@ service cloud.firestore {
           day: 'numeric'
         });
       }
-
       // Show rules help modal
       showRulesHelp.addEventListener('click', () => {
         rulesHelpModal.classList.remove('hidden');
       });
-
       // Close rules help modal
       closeRulesHelp.addEventListener('click', () => {
         rulesHelpModal.classList.add('hidden');
       });
-
       // Update UI based on view mode
       function updateUIForViewMode() {
         if (patientId && patientName) {
           // Doctor viewing patient's streaks
-          pageTitle.textContent = `🌿 ${patientName}'s Skin Streak`;
-          pageSubtitle.textContent = `Viewing ${patientName}'s skincare journey progress`;
+          pageTitle.textContent = `🩺 ${patientName}'s Health Streak`;
+          pageSubtitle.textContent = `Viewing ${patientName}'s healthcare journey progress`;
           uploadButton.classList.add('hidden');
         } else {
           // Patient viewing their own streaks
-          pageTitle.textContent = '🌿 Your Skin Streak';
-          pageSubtitle.textContent = 'Track your daily skincare journey with detailed entries and visual progress';
+          pageTitle.textContent = '🩺 Your Health Streak';
+          pageSubtitle.textContent = 'Track your daily health journey with detailed entries and visual progress';
           uploadButton.classList.remove('hidden');
         }
       }
-
       // Fetch and display streaks from Firebase
       async function loadStreaksFromFirebase() {
         const user = auth.currentUser;
-        
         const targetUserId = patientId || (user ? user.uid : null);
-        
         if (!targetUserId) {
-          container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-slate-500 mb-4">Please log in to view streaks</p><a href="home.html" class="text-green-600 hover:underline">Log In</a></div>`;
+          container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-gray-500 mb-4">Please log in to view streaks</p><a href="login.html" class="color-primary-dark-blue hover:underline">Log In</a></div>`;
           loadingIndicator.classList.add('hidden');
           return;
         }
-
         try {
           const querySnapshot = await db.collection("streaks")
             .where("userId", "==", targetUserId)
             .orderBy("createdAt", "desc")
             .get();
-          
           loadingIndicator.classList.add('hidden');
           permissionHelp.classList.add('hidden');
-          
           if (querySnapshot.empty) {
-            const message = patientId ? `${patientName} hasn't uploaded any skin images yet.` : "No uploads yet. Start by uploading your first image.";
-            const action = patientId ? "" : `<a href="imageupload.html" class="inline-flex items-center px-4 py-2 rounded-md text-white bg-green-600 hover:bg-green-700 text-sm font-semibold"><i class="fas fa-upload mr-2"></i> Upload Image</a>`;
-            container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-slate-500 mb-4">${message}</p>${action}</div>`;
+            const message = patientId ? `${patientName} hasn't uploaded any images yet.` : "No uploads yet. Start by uploading your first image.";
+            const action = patientId ? "" : `<a href="imageupload.html" class="inline-flex items-center px-4 py-2 rounded-md text-white bg-primary-light-blue hover:bg-primary-dark-blue text-sm font-semibold"><i class="fas fa-upload mr-2"></i> Upload Image</a>`;
+            container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-gray-500 mb-4">${message}</p>${action}</div>`;
             return;
           }
-          
           const streaks = [];
           querySnapshot.forEach((doc) => {
             streaks.push({ id: doc.id, ...doc.data() });
           });
-          
           streaks.sort((a, b) => a.createdAt.toDate() - b.createdAt.toDate());
-          
           container.innerHTML = '';
-          
           streaks.forEach((streakData, index) => {
             const card = document.createElement("div");
-            card.className = "bg-white border border-green-100 rounded-2xl shadow-sm p-4 flex flex-col space-y-2 hover:shadow-lg transition relative";
+            card.className = "bg-white border border-blue-100 rounded-2xl shadow-sm p-4 flex flex-col space-y-2 hover:shadow-lg transition relative";
             const dayNumber = index + 1;
             const badgeEmoji = getRandomEmoji();
             card.innerHTML = `
@@ -448,29 +417,26 @@ service cloud.firestore {
                 <img src="${streakData.imageUrl}" class="rounded-xl h-48 w-full object-cover mb-2" />
                 <span class="badge absolute top-2 right-2 z-10">${badgeEmoji} Day ${dayNumber}</span>
               </div>
-              <div class="space-y-1 text-sm text-slate-700">
-                <p><i class="fas fa-calendar-alt text-green-500 mr-2"></i><strong>Date:</strong> ${formatFirebaseDate(streakData.createdAt)}</p>
+              <div class="space-y-1 text-sm text-gray-700">
+                <p><i class="fas fa-calendar-alt color-primary-dark-blue mr-2"></i><strong>Date:</strong> ${formatFirebaseDate(streakData.createdAt)}</p>
                 <p><i class="fas fa-heartbeat text-pink-500 mr-2"></i><strong>Problem:</strong> ${streakData.problem || 'Not specified'}</p>
-                <p><i class="fas fa-palette text-yellow-500 mr-2"></i><strong>Skin Tone:</strong> ${streakData.skintone || 'Not specified'}</p>
+                <p><i class="fas fa-user text-yellow-500 mr-2"></i><strong>Body Part:</strong> ${streakData.skintone || 'Not specified'}</p>
                 <p><i class="fas fa-pills text-indigo-500 mr-2"></i><strong>Medication:</strong> ${streakData.medication || 'Not specified'}</p>
               </div>
             `;
             container.appendChild(card);
           });
-          
         } catch (error) {
           console.error("Error loading streaks:", error);
           loadingIndicator.classList.add('hidden');
-          
           if (error.code === 'permission-denied') {
             permissionHelp.classList.remove('hidden');
-            container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-red-500 mb-2">Permission Error: Cannot access streaks</p><p class="text-slate-500 text-sm">Please update your Firebase security rules as shown above.</p></div>`;
+            container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-red-500 mb-2">Permission Error: Cannot access streaks</p><p class="text-gray-500 text-sm">Please update your Firebase security rules as shown above.</p></div>`;
           } else {
-            container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-red-500 mb-2">Error loading streaks</p><p class="text-slate-500 text-sm">Please try again later or contact support if the problem persists.</p></div>`;
+            container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-red-500 mb-2">Error loading streaks</p><p class="text-gray-500 text-sm">Please try again later or contact support if the problem persists.</p></div>`;
           }
         }
       }
-
       // Logout function
       window.logout = function() {
         auth.signOut().then(() => {
@@ -480,7 +446,6 @@ service cloud.firestore {
           showError("Logout failed: " + error.message);
         });
       };
-
       // Helper function to show error messages
       function showError(message) {
         const alertDiv = document.createElement('div');
@@ -489,18 +454,15 @@ service cloud.firestore {
         document.body.appendChild(alertDiv);
         setTimeout(() => alertDiv.remove(), 5000);
       }
-
       // Check auth state and load data
       auth.onAuthStateChanged(async (user) => {
         updateUIForViewMode();
-        
         if (user) {
           const userRole = await getUserRole(user.uid);
           renderHeader(userRole);
-          
           if (patientId) {
             if (userRole !== "doctor") {
-              container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-red-500 mb-2">Access Denied</p><p class="text-slate-500 text-sm">You need doctor privileges to view patient records.</p></div>`;
+              container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-red-500 mb-2">Access Denied</p><p class="text-gray-500 text-sm">You need doctor privileges to view patient records.</p></div>`;
               loadingIndicator.classList.add('hidden');
               return;
             }
@@ -511,7 +473,7 @@ service cloud.firestore {
         } else {
           renderHeader("patient"); // Render a default header even if logged out
           loadingIndicator.classList.add('hidden');
-          container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-slate-500 mb-4">Please log in to view your streaks</p><a href="login.html" class="text-green-600 hover:underline">Log In</a></div>`;
+          container.innerHTML = `<div class="col-span-full text-center py-8"><p class="text-gray-500 mb-4">Please log in to view your streaks</p><a href="login.html" class="color-primary-dark-blue hover:underline">Log In</a></div>`;
         }
       });
     </script>

@@ -17,12 +17,18 @@
       body {
         font-family: "Inter", sans-serif;
       }
+      /* Custom colors from home.html */
+      .color-primary-dark-blue { color: #01579B; }
+      .bg-primary-dark-blue { background-color: #01579B; }
+      .color-primary-light-blue { color: #00AEEF; }
+      .bg-primary-light-blue { background-color: #00AEEF; }
+
       .service-card:hover {
         transform: scale(1.03);
         transition: all 0.3s ease;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       }
-       /* Mobile menu styles */
+      /* Mobile menu styles */
       .mobile-menu {
         display: none;
         max-height: 0;
@@ -39,99 +45,77 @@
       .mobile-menu-button.active {
         transform: rotate(90deg);
       }
-      .btn-scale { 
-        transition: transform 0.3s ease; 
-        display: inline-block; 
+      .btn-scale {
+        transition: transform 0.3s ease;
+        display: inline-block;
       }
-      .btn-scale:hover, .btn-scale:focus { 
-        transform: scale(1.05); 
-        outline: none; 
+      .btn-scale:hover,
+      .btn-scale:focus {
+        transform: scale(1.05);
+        outline: none;
       }
     </style>
   </head>
 
-  <body class="bg-[#f3f9ff] text-slate-900">
-    <header class="bg-white shadow">
-      <nav
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16"
-      >
-        <a href="home.html" class="flex items-center space-x-3">
-          <img
-            src="very new medicine.jpg"
-            class="h-12 w-12 rounded-full"
-            alt="AROKYA SAHAYAK Logo"
-          />
-          <span class="font-extrabold text-slate-900 text-lg">AROKYA SAHAYAK</span>
-        </a>
-        <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-          <a href="home.html" class="hover:text-green-600">Home</a>
-          <a href="about.html" class="hover:text-green-600">About</a>
-          <a href="services.html" class="text-green-500 font-semibold">Services</a>
-          <a href="blog.html" class="hover:text-green-600">Blog</a>
-          <a href="contact.html" class="hover:text-green-600">Contact</a>
-          <a
-            href="login.html"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
-            >Login</a
-          >
-          <a
-            href="registration.html"
-            class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
-            >Sign Up</a
-          >
-        </div>
-         <div class="flex md:hidden">
-            <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+  <body class="bg-gray-50 text-gray-800">
+    <header class="bg-primary-dark-blue shadow sticky top-0 z-50 text-white">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <div class="flex items-center justify-between w-full">
+            <a href="home.html" class="flex items-center space-x-3">
+              <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo" />
+              <span class="font-extrabold text-base md:text-lg">AROKYA SAHAYAK</span>
+            </a>
+            <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+              <a href="patient.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+              <a href="about1.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+              <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm text-sm font-medium hover:bg-white hover:text-primary-dark-blue transition-colors">My Profile</a>
+              <a href="home.html" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-blue-800 focus:ring-2 focus:ring-offset-2 focus:ring-primary-light-blue transition-colors">Log Out</a>
+            </div>
+            <div class="flex md:hidden">
+              <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none p-2">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
-            </button>
-        </div>
-      </nav>
-        <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-            <a href="home.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Home</a>
-            <a href="about.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
-            <a href="services.html" class="block py-3 text-green-500 font-semibold border-b border-gray-100">Services</a>
-            <a href="blog.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Blog</a>
-            <a href="contact.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">Contact</a>
-            <div class="mt-4 space-y-3">
-            <a href="login.html" class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">Login</a>
-            <a href="registration.html" class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Sign Up</a>
+              </button>
             </div>
         </div>
+      </nav>
+      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+          <a href="patient.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Home</a>
+          <a href="about1.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
+          <a href="services1.html" class="block py-3 text-primary-dark-blue font-semibold border-b border-gray-100">Services</a>
+          <a href="blog.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Blog</a>
+          <a href="contact.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">Contact</a>
+      </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 class="text-4xl font-extrabold text-center text-[#0a1e3a] mb-6">
+      <h1 class="text-4xl font-extrabold text-center color-primary-dark-blue mb-6">
         Our Services
       </h1>
-      <p class="text-center text-slate-600 mb-12 max-w-3xl mx-auto">
-        At AROKYA SAHAYAK, we offer AI-powered skin tracking solutions designed to
-        help you monitor and improve your skin health conveniently from home.
-        Explore our key services below.
+      <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+        At AROKYA SAHAYAK, we offer comprehensive healthcare solutions designed to help you monitor and improve your health conveniently from home. Explore our key services below.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="bg-white p-6 rounded-xl shadow-sm service-card text-center">
-          <i class="fas fa-camera-retro text-green-600 text-4xl mb-4"></i>
-          <h3 class="text-xl font-bold mb-2">Daily Skin Tracking</h3>
-          <p class="text-slate-600 mb-4">
-            Easily upload your skin images daily to monitor progress, spot
-            issues early, and stay consistent in your skincare routine.
+          <i class="fas fa-camera-retro color-primary-dark-blue text-4xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">Daily Health Tracking</h3>
+          <p class="text-gray-600 mb-4">
+            Easily upload your health metrics or images daily to monitor progress, spot issues early, and stay consistent in your healthcare routine.
           </p>
           <img
             src="https://t3.ftcdn.net/jpg/04/22/50/10/360_F_422501065_iKBL7qoOhaXqjxONodvSnGmuuwkt7pbf.jpg"
             class="w-full h-48 object-cover rounded-lg"
-            alt="Daily Skin Tracking"
+            alt="Daily Health Tracking"
           />
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow-sm service-card text-center">
-          <i class="fas fa-chart-line text-green-600 text-4xl mb-4"></i>
+          <i class="fas fa-chart-line color-primary-dark-blue text-4xl mb-4"></i>
           <h3 class="text-xl font-bold mb-2">AI Progress Reports</h3>
-          <p class="text-slate-600 mb-4">
-            Receive automated AI reports with graphs, timelines, and
-            recommendations based on your skin’s visual progress.
+          <p class="text-gray-600 mb-4">
+            Receive automated AI reports with graphs, timelines, and recommendations based on your health's visual progress.
           </p>
           <img
             src="https://india.wildoak.store/cdn/shop/articles/Ai-Skin-Blog-Landscape_67f02c04-0302-466a-ace0-876b9d0aca44.webp?v=1741325531"
@@ -141,52 +125,39 @@
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow-sm service-card text-center">
-          <i class="fas fa-user-md text-green-600 text-4xl mb-4"></i>
-          <h3 class="text-xl font-bold mb-2">Experts Consultation</h3>
-          <p class="text-slate-600 mb-4">
-            Book personalized consultations with certified dermatologists
-            directly through the platform, with your progress data ready.
+          <i class="fas fa-user-md color-primary-dark-blue text-4xl mb-4"></i>
+          <h3 class="text-xl font-bold mb-2">Expert Consultation</h3>
+          <p class="text-gray-600 mb-4">
+            Book personalized consultations with certified doctors directly through the platform, with your progress data ready.
           </p>
           <img
             src="https://www.aaynaclinic.com/wp-content/uploads/2023/01/rejuvenating-facial-treatment-min-scaled.webp"
             class="w-full h-48 object-cover rounded-lg"
-            alt="Dermatologist Consultation"
+            alt="Doctor Consultation"
           />
         </div>
       </div>
     </main>
 
-    <footer
-      class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
-    >
+    <footer class="bg-primary-dark-blue border-t border-primary-dark-blue py-10 text-white">
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
         <div>
           <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
-            <img
-              src="very new medicine.jpg"
-              class="h-full w-full object-cover"
-              alt="AROKYA SAHAYAK Logo"
-            />
+            <img src="as.jpg" class="h-full w-full object-cover" alt="AROKYA SAHAYAK Logo" />
           </div>
           <p class="text-sm leading-relaxed">
-            AROKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
-            skin progress, get tips, and consult top dermatologists from the
-            comfort of your home.
+            AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect with top doctors, manage appointments, and get expert medical advice right from your home.
           </p>
         </div>
 
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
           <ul class="space-y-2 text-sm">
-            <li><a href="home.html" class="hover:underline">Home</a></li>
-            <li><a href="about.html" class="hover:underline">About Us</a></li>
-            <li>
-              <a href="services.html" class="hover:underline">Our Services</a>
-            </li>
-            <li>
-              <a href="blog.html" class="hover:underline">Skin Tips Blog</a>
-            </li>
-            <li><a href="contact.html" class="hover:underline">Contact</a></li>
+            <li><a href="home.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+            <li><a href="about.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
+            <li><a href="services.html" class="hover:text-primary-light-blue transition-colors">Our Services</a></li>
+            <li><a href="blog.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a></li>
+            <li><a href="contact.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
           </ul>
         </div>
 
@@ -194,64 +165,48 @@
           <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
           <p class="text-sm">📍 Tamil Nadu, India</p>
           <p class="text-sm mt-2">📞 +91 98765 43210</p>
-          <p class="text-sm mt-2">✉️ support@AROKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">✉ support@AROKYASAHAYAK.com</p>
           <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
         </div>
 
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
           <ul class="space-y-2 text-sm mb-4">
-            <li>
-              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
-            </li>
-            <li>
-              <a href="terms.html" class="hover:underline"
-                >Terms & Conditions</a
-              >
-            </li>
+            <li><a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a></li>
+            <li><a href="terms.html" class="hover:text-primary-light-blue transition-colors">Terms & Conditions</a></li>
           </ul>
           <div class="flex space-x-4">
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-facebook-f"></i
-            ></a>
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-instagram"></i
-            ></a>
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-twitter"></i
-            ></a>
-            <a href="#" class="hover:text-white"
-              ><i class="fab fa-linkedin-in"></i
-            ></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-linkedin-in"></i></a>
           </div>
         </div>
       </div>
-      <div
-        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
-      >
+      <div class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6">
         © 2025 AROKYA SAHAYAK. All rights reserved.
       </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const mobileMenuButton = document.querySelector('.mobile-menu-button');
-          const mobileMenu = document.querySelector('.mobile-menu');
-          
-          if(mobileMenuButton) {
-            mobileMenuButton.addEventListener('click', function() {
-              mobileMenu.classList.toggle('active');
-              mobileMenuButton.classList.toggle('active');
-              
-              const icon = mobileMenuButton.querySelector('svg');
-              if (mobileMenu.classList.contains('active')) {
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-              } else {
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-              }
-            });
-          }
-        });
-      </script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.querySelector('.mobile-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        if(mobileMenuButton) {
+          mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+            mobileMenuButton.classList.toggle('active');
+            
+            const icon = mobileMenuButton.querySelector('svg');
+            if (mobileMenu.classList.contains('active')) {
+              icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+            } else {
+              icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
