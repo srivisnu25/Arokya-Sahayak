@@ -1,11 +1,8 @@
-
-<!-- patient.html -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Patient Dashboard |AROYKYA SAHAYAK</title>
+    <title>Patient Dashboard | AROYKYA SAHAYAK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -20,6 +17,14 @@
       body {
         font-family: "Inter", sans-serif;
       }
+      /* Custom colors from home.html */
+      .color-primary-dark-blue { color: #01579B; }
+      .bg-primary-dark-blue { background-color: #01579B; }
+      .border-primary-dark-blue { border-color: #01579B; }
+      .color-primary-light-blue { color: #00AEEF; }
+      .bg-primary-light-blue { background-color: #00AEEF; }
+      .border-primary-light-blue { border-color: #00AEEF; }
+
       .dashboard-card:hover {
         transform: scale(1.03);
         transition: transform 0.3s;
@@ -54,274 +59,249 @@
     </style>
   </head>
 
-  <body class="bg-[#f3f9ff] text-slate-900">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+  <body class="bg-gray-50 text-gray-800">
+    <header class="bg-primary-dark-blue shadow sticky top-0 z-50 text-white">
       <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         <div class="flex items-center justify-between w-full">
           <a href="patient.html" class="flex items-center space-x-3">
             <img
-              src="very new medicine.jpg"
+              src="as.jpg"
               class="h-10 w-10 md:h-12 md:w-12 rounded-full"
-              alt="AROYKYA SAHAYAK Logo"
+              alt="AROKYA SAHAYAK Logo"
             />
-            <span class="font-extrabold text-slate-900 text-base md:text-lg">AROYKYA SAHAYAK</span>
+            <span class="font-extrabold text-base md:text-lg">AROKYA SAHAYAK</span>
           </a>
           
-          <!-- Mobile menu button -->
           <div class="flex md:hidden">
-            <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+            <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none p-2">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
             </button>
           </div>
           
-          <!-- Desktop Navigation -->
-          <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-            <a href="patient.html" class="hover:text-green-600 text-green-500">Home</a>
-            <a href="about1.html" class="hover:text-green-600">About</a>
+          <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+            <a href="patient.html" class="bg-primary-dark-blue px-3 py-2 rounded-md font-semibold">Home</a>
+            <a href="about1.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
             <a
               href="profile.html"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm text-sm font-medium hover:bg-white hover:text-primary-dark-blue transition-colors"
               >My Profile</a
             >
             <a
               href="home.html"
-              class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors"
               >Log Out</a
             >
           </div>
         </div>
       </nav>
       
-      <!-- Mobile menu -->
-      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-        <a href="patient.html" class="block py-3 text-green-500 border-b border-gray-100">Home</a>
-        <a href="about1.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+      <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+        <a href="patient.html" class="block py-3 text-primary-dark-blue font-semibold border-b border-gray-100">Home</a>
+        <a href="about1.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
         <div class="mt-4 space-y-3">
           <a
             href="profile.html"
-            class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
+            class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50"
             >My Profile</a
           >
           <a
             href="home.html"
-            class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
+            class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors"
             >Log Out</a
           >
         </div>
       </div>
     </header>
-    <!-- Dashboard Main -->
     <main class="max-w-7xl mx-auto px-4 py-12 space-y-10">
-      <!-- Welcome Section -->
       <div
         class="bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between"
       >
-        <div class="space-y-3">
-          <h1 class="text-3xl font-extrabold text-slate-900">
-            Welcome, <span id="welcome" class="text-green-600"></span> 👋
+        <div class="space-y-3 text-center md:text-left">
+          <h1 class="text-3xl font-extrabold text-gray-900">
+            Welcome, <span id="welcome" class="color-primary-dark-blue"></span> 👋
           </h1>
-          <p class="text-slate-600">
-            Stay consistent with your skincare. Monitor your progress and stay
+          <p class="text-gray-600">
+            Stay consistent with your healthcare. Monitor your progress and stay
             connected with your doctor.
           </p>
         </div>
         <img
           src="https://cdn-icons-png.flaticon.com/512/4208/4208396.png"
-          class="w-36"
+          class="w-36 mt-6 md:mt-0"
           alt="Dashboard Illustration"
         />
       </div>
 
-  <!-- Welcome Section -->
-  <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between">
-    <div class="space-y-3">
-      <!-- <h1 class="text-3xl font-extrabold text-slate-900">Welcome, <span id="Welcome" class="text-green-600"></span> 👋</h1> -->
-       <h1 class="text-3xl font-extrabold text-slate-900">
-   <span id="welcome" class="text-green-600"></span> 
-</h1>
-
-      <!-- Dashboard Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Daily Upload -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
-          <i class="fas fa-upload text-green-600 text-4xl"></i>
-          <h3 class="font-bold text-xl">Upload Daily Skin Image</h3>
-          <p class="text-slate-600 text-sm">
+          <i class="fas fa-upload color-primary-dark-blue text-4xl"></i>
+          <h3 class="font-bold text-xl">Upload Daily Image</h3>
+          <p class="text-gray-600 text-sm">
             Keep your streak alive by uploading daily images for AI analysis.
           </p>
           <a
             href="imageupload.html"
-            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            class="inline-block mt-2 px-4 py-2 bg-primary-light-blue text-white rounded-lg font-semibold hover:bg-primary-dark-blue transition-colors"
             >Upload Now</a
           >
         </div>
 
 
-        <!-- AI Streak Analysis -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
-          <i class="fas fa-chart-line text-green-600 text-4xl"></i>
+          <i class="fas fa-chart-line color-primary-dark-blue text-4xl"></i>
           <h3 class="font-bold text-xl">AI Streak Analysis</h3>
-          <p class="text-slate-600 text-sm">
+          <p class="text-gray-600 text-sm">
             View your daily progress with visual AI streak reports.
           </p>
           <a
             href="streak.html"
-            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            class="inline-block mt-2 px-4 py-2 bg-primary-light-blue text-white rounded-lg font-semibold hover:bg-primary-dark-blue transition-colors"
             >View Progress</a
           >
         </div>
 
-        <!-- Doctor Suggestions -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
-          <i class="fas fa-notes-medical text-green-600 text-4xl"></i>
+          <i class="fas fa-notes-medical color-primary-dark-blue text-4xl"></i>
           <h3 class="font-bold text-xl">Doctor Suggestions</h3>
-          <p class="text-slate-600 text-sm">
+          <p class="text-gray-600 text-sm">
             Get professional advice based on your progress and uploads.
           </p>
           <a
             href="doctor-suggestion.html"
-            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            class="inline-block mt-2 px-4 py-2 bg-primary-light-blue text-white rounded-lg font-semibold hover:bg-primary-dark-blue transition-colors"
             >View Suggestions</a
           >
         </div>
 
-        <!-- Reminders -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
-          <i class="fas fa-bell text-green-600 text-4xl"></i>
+          <i class="fas fa-bell color-primary-dark-blue text-4xl"></i>
           <h3 class="font-bold text-xl">Set Reminders</h3>
-          <p class="text-slate-600 text-sm">
+          <p class="text-gray-600 text-sm">
             Never miss a dose or photo upload. Schedule custom reminders.
           </p>
           <a
             href="#"
-            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            class="inline-block mt-2 px-4 py-2 bg-primary-light-blue text-white rounded-lg font-semibold hover:bg-primary-dark-blue transition-colors"
             >Set Reminder</a
           >
         </div>
 
-        <!-- Product Rating -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
-          <i class="fas fa-star text-green-600 text-4xl"></i>
+          <i class="fas fa-star color-primary-dark-blue text-4xl"></i>
           <h3 class="font-bold text-xl">Rate Products</h3>
-          <p class="text-slate-600 text-sm">
+          <p class="text-gray-600 text-sm">
             Help others by rating skincare products after usage.
           </p>
           <a
             href="#"
-            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            class="inline-block mt-2 px-4 py-2 bg-primary-light-blue text-white rounded-lg font-semibold hover:bg-primary-dark-blue transition-colors"
             >Rate Now</a
           >
         </div>
 
-        <!-- Chat with Doctor -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
-          <i class="fas fa-comments text-green-600 text-4xl"></i>
+          <i class="fas fa-comments color-primary-dark-blue text-4xl"></i>
           <h3 class="font-bold text-xl">Chat with Doctor</h3>
-          <p class="text-slate-600 text-sm">
+          <p class="text-gray-600 text-sm">
             Quickly connect with your dermatologist for any queries.
           </p>
           <a
             href="chat.html"
-            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
+            class="inline-block mt-2 px-4 py-2 bg-primary-light-blue text-white rounded-lg font-semibold hover:bg-primary-dark-blue transition-colors"
             >Start Chat</a
           >
         </div>
       </div>
     </main>
 
-    <!-- Footer -->
- <footer
-      class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
+    <footer
+      class="w-full bg-primary-dark-blue border-t border-primary-dark-blue py-10 text-white"
     >
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
         <div>
           <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
             <img
-              src="very new medicine.jpg"
+              src="as.jpg"
               class="h-full w-full object-cover"
-              alt="dermastreak Logo"
+              alt="AROKYA SAHAYAK Logo"
             />
           </div>
           <p class="text-sm leading-relaxed">
-           AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
-            skin progress, get tips, and consult top dermatologists from the
-            comfort of your home.
+           AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect
+            with top doctors, manage appointments, and get expert medical advice
+            right from your home.
           </p>
         </div>
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
           <ul class="space-y-2 text-sm">
-            <li><a href="patient.html" class="hover:underline">Home</a></li>
-            <li><a href="about1.html" class="hover:underline">About Us</a></li>
+            <li><a href="patient.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+            <li><a href="about1.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
             <li>
-              <a href="services1.html" class="hover:underline">Our Services</a>
+              <a href="services1.html" class="hover:text-primary-light-blue transition-colors">Our Services</a>
             </li>
             <li>
-              <a href="blog1.html" class="hover:underline">Skin Tips Blog</a>
+              <a href="blog1.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a>
             </li>
-            <li><a href="contact1.html" class="hover:underline">Contact</a></li>
+            <li><a href="contact1.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
           </ul>
         </div>
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
           <p class="text-sm">📍 Tamil Nadu, India</p>
           <p class="text-sm mt-2">📞 +91 98765 43210</p>
-          <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
+          <p class="text-sm mt-2">✉ support@arokyasahayak.com</p>
           <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
         </div>
         <div>
           <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
           <ul class="space-y-2 text-sm mb-4">
             <li>
-              <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+              <a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a>
             </li>
             <li>
-              <a href="terms.html" class="hover:underline"
+              <a href="terms.html" class="hover:text-primary-light-blue transition-colors"
                 >Terms & Conditions</a
               >
             </li>
           </ul>
           <div class="flex space-x-4">
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-facebook-f"></i
             ></a>
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-instagram"></i
             ></a>
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-twitter"></i
             ></a>
-            <a href="#" class="hover:text-white"
+            <a href="#" class="hover:text-primary-light-blue transition-colors"
               ><i class="fab fa-linkedin-in"></i
             ></a>
           </div>
         </div>
       </div>
       <div
-        class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+        class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6"
       >
-        © 2025 AROYKYA SAHAYAK. All rights reserved.
+        © 2025 AROKYA SAHAYAK. All rights reserved.
       </div>
     </footer>
 
-    <!-- Username Script -->
-     
-    <!-- Mobile menu toggle functionality -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -360,7 +340,6 @@
     document.getElementById("welcome").innerText = username || "User";
   </script>
 
-  <!-- Firebase Logout Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -423,4 +402,4 @@ window.logout = async function() {
 };
   </script>
   </body>
-</html> 
+</html>

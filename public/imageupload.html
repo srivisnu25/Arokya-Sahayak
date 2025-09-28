@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Upload Skin Image - AROYKYA SAHAYAK</title>
+  <title>Upload Image - AROKYA SAHAYAK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
@@ -11,7 +11,14 @@
     body {
       font-family: "Inter", sans-serif;
     }
-    
+    /* Custom colors from home.html */
+    .color-primary-dark-blue { color: #01579B; }
+    .bg-primary-dark-blue { background-color: #01579B; }
+    .border-primary-dark-blue { border-color: #01579B; }
+    .color-primary-light-blue { color: #00AEEF; }
+    .bg-primary-light-blue { background-color: #00AEEF; }
+    .border-primary-light-blue { border-color: #00AEEF; }
+
     /* Mobile menu styles */
     .mobile-menu {
       display: none;
@@ -50,186 +57,182 @@
     }
     input:focus, select:focus {
       outline: none;
-      border-color: #16a34a;
-      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+      border-color: #00AEEF;
+      box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.2);
     }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+  <header class="bg-primary-dark-blue shadow sticky top-0 z-50 text-white">
     <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
       <div class="flex items-center justify-between w-full">
         <a href="patient.html" class="flex items-center space-x-3">
           <img
-            src="very new medicine.jpg"
+            src="as.jpg"
             class="h-10 w-10 md:h-12 md:w-12 rounded-full"
-            alt="AROYKYA SAHAYAK Logo"
+            alt="AROKYA SAHAYAK Logo"
           />
-          <span class="font-extrabold text-slate-900 text-base md:text-lg">AROYKYA SAHAYAK</span>
+          <span class="font-extrabold text-base md:text-lg">AROKYA SAHAYAK</span>
         </a>
         
-        <!-- Mobile menu button -->
         <div class="flex md:hidden">
-          <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
+          <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none p-2">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
           </button>
         </div>
         
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
-          <a href="patient.html" class="hover:text-green-600">Home</a>
-          <a href="about1.html" class="hover:text-green-600">About</a>
+        <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+          <a href="patient.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+          <a href="about1.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
           <a
             href="profile.html"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm text-sm font-medium hover:bg-white hover:text-primary-dark-blue transition-colors"
             >My Profile</a
           >
           <a
             href="home.html"
-            class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors"
             >Log Out</a
           >
         </div>
       </div>
     </nav>
     
-    <!-- Mobile menu -->
-    <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
-      <a href="patient.html" class="block py-3 text-green-500 border-b border-gray-100">Home</a>
-      <a href="about1.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
+    <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+      <a href="patient.html" class="block py-3 text-primary-dark-blue font-semibold border-b border-gray-100">Home</a>
+      <a href="about1.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
       <div class="mt-4 space-y-3">
         <a
           href="profile.html"
-          class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-gray-50"
+          class="block text-center py-3 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50"
           >My Profile</a
         >
         <a
           href="home.html"
-          class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
+          class="block text-center py-3 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors"
           >Log Out</a
         >
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="flex-grow flex items-center justify-center p-6">
     <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-lg w-full space-y-6">
-      <h2 class="text-2xl md:text-3xl font-bold text-center text-green-600">Upload Your Skin Image</h2>
-      <p class="text-center text-gray-500">Track your skincare journey by uploading today's image.</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-center color-primary-dark-blue">Upload Your Image</h2>
+      <p class="text-center text-gray-500">Track your healthcare journey by uploading today's image.</p>
 
       <form id="uploadForm" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Problem Name</label>
-          <input type="text" name="problem" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+          <input type="text" name="problem" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light-blue" />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Skin Tone</label>
-          <select name="skintone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-            <option value="Fair">Fair</option>
-            <option value="Medium">Medium</option>
-            <option value="Dark">Dark</option>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Body Part</label>
+          <select name="skintone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light-blue">
+            <option value="Face">Face</option>
+            <option value="Hand">Hand</option>
+            <option value="Leg">Leg</option>
+            <option value="Chest">Chest</option>
+            <option value="Back">Back</option>
+            <option value="Other">Other</option>
           </select>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Current Medication</label>
-          <input type="text" name="medication" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+          <input type="text" name="medication" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light-blue" />
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Select Image</label>
-          <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+          <input type="file" name="image" accept="image/*" onchange="previewImage(event)" required class="w-full text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-primary-dark-blue hover:file:bg-blue-100" />
           <div class="flex justify-center">
             <img id="preview" class="hidden mt-4 max-h-64 rounded-lg shadow-md" alt="Image Preview" />
           </div>
         </div>
 
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition duration-200">
+        <button type="submit" class="w-full bg-primary-light-blue hover:bg-primary-dark-blue text-white font-semibold py-3 rounded-lg transition duration-200">
           Upload Image
         </button>
       </form>
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300">
+  <footer class="w-full bg-primary-dark-blue border-t border-primary-dark-blue py-10 text-white">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
       <div>
         <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
           <img
-            src="very new medicine.jpg"
+            src="as.jpg"
             class="h-full w-full object-cover"
-            alt="dermastreak Logo"
+            alt="AROKYA SAHAYAK Logo"
           />
         </div>
         <p class="text-sm leading-relaxed">
-          AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
-          skin progress, get tips, and consult top dermatologists from the
-          comfort of your home.
+          AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect
+          with top doctors, manage appointments, and get expert medical advice
+          from the comfort of your home.
         </p>
       </div>
       <div>
         <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
         <ul class="space-y-2 text-sm">
-          <li><a href="patient.html" class="hover:underline">Home</a></li>
-          <li><a href="about1.html" class="hover:underline">About Us</a></li>
+          <li><a href="patient.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+          <li><a href="about1.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
           <li>
-            <a href="services1.html" class="hover:underline">Our Services</a>
+            <a href="services1.html" class="hover:text-primary-light-blue transition-colors">Our Services</a>
           </li>
           <li>
-            <a href="blog1.html" class="hover:underline">Skin Tips Blog</a>
+            <a href="blog1.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a>
           </li>
-          <li><a href="contact1.html" class="hover:underline">Contact</a></li>
+          <li><a href="contact1.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
         </ul>
       </div>
       <div>
         <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
         <p class="text-sm">📍 Tamil Nadu, India</p>
         <p class="text-sm mt-2">📞 +91 98765 43210</p>
-        <p class="text-sm mt-2">✉️ support@AROYKYA SAHAYAK.com</p>
+        <p class="text-sm mt-2">✉ support@arokyasahayak.com</p>
         <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
       </div>
       <div>
         <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
         <ul class="space-y-2 text-sm mb-4">
           <li>
-            <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+            <a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a>
           </li>
           <li>
-            <a href="terms.html" class="hover:underline"
+            <a href="terms.html" class="hover:text-primary-light-blue transition-colors"
               >Terms & Conditions</a
             >
           </li>
         </ul>
         <div class="flex space-x-4">
-          <a href="#" class="hover:text-white"
+          <a href="#" class="hover:text-primary-light-blue transition-colors"
             ><i class="fab fa-facebook-f"></i
           ></a>
-          <a href="#" class="hover:text-white"
+          <a href="#" class="hover:text-primary-light-blue transition-colors"
             ><i class="fab fa-instagram"></i
           ></a>
-          <a href="#" class="hover:text-white"
+          <a href="#" class="hover:text-primary-light-blue transition-colors"
             ><i class="fab fa-twitter"></i
           ></a>
-          <a href="#" class="hover:text-white"
+          <a href="#" class="hover:text-primary-light-blue transition-colors"
             ><i class="fab fa-linkedin-in"></i
           ></a>
         </div>
       </div>
     </div>
     <div
-      class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-slate-400 px-6"
+      class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6"
     >
-      © 2025 AROYKYA SAHAYAK. All rights reserved.
+      © 2025 AROKYA SAHAYAK. All rights reserved.
     </div>
   </footer>
 
-  <!-- Mobile menu toggle functionality -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -308,8 +311,8 @@
 
       const user = auth.currentUser;
       if (!user) {
-          alert("Please log in before uploading an image.");
-          return;
+        alert("Please log in before uploading an image.");
+        return;
       }
 
       const originalButtonText = submitButton.innerHTML;
@@ -338,7 +341,7 @@
         });
 
         if (!cloudinaryRes.ok) {
-            throw new Error('Could not upload to Cloudinary.');
+          throw new Error('Could not upload to Cloudinary.');
         }
 
         const cloudinaryData = await cloudinaryRes.json();

@@ -10,6 +10,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <style>
+    /* Custom colors from home.html */
+    .color-primary-dark-blue { color: #01579B; }
+    .bg-primary-dark-blue { background-color: #01579B; }
+    .color-primary-light-blue { color: #00AEEF; }
+    .bg-primary-light-blue { background-color: #00AEEF; }
     .message-container {
       scroll-behavior: smooth;
       height: 60vh;
@@ -29,7 +34,7 @@
       max-width: 75%;
     }
     .patient-message {
-      background-color: #dcfce7; /* Light Green */
+      background-color: #f3f4f6; /* Light Gray */
       border-radius: 1rem 1rem 1rem 0;
       margin-right: auto;
       max-width: 75%;
@@ -39,7 +44,6 @@
       color: #6b7280;
       margin-top: 0.25rem;
     }
-    
     /* Mobile menu styles */
     .mobile-menu {
       display: none;
@@ -47,7 +51,6 @@
     .mobile-menu.active {
       display: block;
     }
-    
     /* Responsive adjustments */
     @media (max-width: 768px) {
       .nav-links {
@@ -72,7 +75,6 @@
         padding: 0.75rem;
       }
     }
-    
     @media (max-width: 640px) {
       .message-container {
         height: 60vh;
@@ -84,14 +86,12 @@
   </style>
 </head>
 <body class="bg-gray-50">
-  <!-- Header will be dynamically inserted here -->
   <div id="header-container"></div>
-
   <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
       <div class="chat-header bg-gray-50 px-4 md:px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <div class="flex items-center space-x-3 md:space-x-4">
-          <div id="recipientAvatar" class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gray-300 flex items-center justify-center text-lg md:text-xl font-semibold text-gray-600 overflow-hidden">
+          <div id="recipientAvatar" class="h-10 w-10 md:h-12 md:w-12 rounded-full bg-blue-200 flex items-center justify-center text-lg md:text-xl font-semibold color-primary-dark-blue overflow-hidden">
             <i class="fas fa-user-md"></i>
           </div>
           <div class="max-w-[60%] md:max-w-none">
@@ -99,47 +99,41 @@
             <p id="appointmentInfo" class="text-xs md:text-sm text-gray-500 truncate">Connecting...</p>
           </div>
         </div>
-        <div id="statusBadge" class="px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <div id="statusBadge" class="px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
           Active
         </div>
       </div>
-      
       <div id="loading" class="text-center py-12">
-        <div class="inline-block loading-spinner text-green-600 text-4xl mb-4">
+        <div class="inline-block loading-spinner color-primary-dark-blue text-4xl mb-4">
           <i class="fas fa-spinner"></i>
         </div>
         <p class="text-gray-600">Loading chat...</p>
       </div>
-      
       <div id="chatContainer" class="hidden">
         <div id="messages" class="message-container chat-messages p-4 md:p-6 space-y-3 md:space-y-4">
-          <!-- Messages will be loaded here -->
-        </div>
-        
+          </div>
         <div class="chat-input border-t border-gray-200 p-3 md:p-4 bg-gray-50">
           <form id="messageForm" class="flex items-center space-x-2 md:space-x-3">
             <input type="text" id="messageInput" placeholder="Type your message..." 
-                   class="flex-1 px-3 py-2 md:px-4 md:py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm md:text-base"
+                   class="flex-1 px-3 py-2 md:px-4 md:py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-primary-light-blue focus:border-primary-light-blue text-sm md:text-base"
                    aria-label="Type your message">
-            <button type="submit" class="p-2 w-9 h-9 md:w-10 md:h-10 flex-shrink-0 rounded-full bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            <button type="submit" class="p-2 w-9 h-9 md:w-10 md:h-10 flex-shrink-0 rounded-full bg-primary-light-blue text-white hover:bg-primary-dark-blue focus:outline-none focus:ring-2 focus:ring-primary-light-blue transition-colors"
                     aria-label="Send message">
               <i class="fas fa-paper-plane text-sm md:text-base"></i>
             </button>
           </form>
         </div>
       </div>
-      
       <div id="errorState" class="hidden text-center py-12 px-4">
         <i class="fas fa-exclamation-circle text-4xl text-red-500 mb-4"></i>
         <h3 class="text-xl font-medium text-gray-700 mb-2" id="errorTitle">Error loading chat</h3>
         <p class="text-gray-500 mb-4" id="errorMessage">Unable to load the chat conversation.</p>
-        <a href="#" id="backButton" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
+        <a href="#" id="backButton" class="inline-flex items-center px-4 py-2 bg-primary-light-blue text-white rounded-lg hover:bg-primary-dark-blue text-sm transition-colors">
           Go Back
         </a>
       </div>
     </div>
   </main>
-  
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -150,12 +144,10 @@
       messagingSenderId: "32726012100",
       appId: "1:32726012100:web:b5a2071c3ecea58810b991"
     };
-
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-
     // DOM elements
     const loadingElement = document.getElementById('loading');
     const chatContainer = document.getElementById('chatContainer');
@@ -168,7 +160,6 @@
     const appointmentInfo = document.getElementById('appointmentInfo');
     const headerContainer = document.getElementById('header-container');
     const backButton = document.getElementById('backButton');
-    
     // Global variables
     let currentUser = null;
     let recipientId = null;
@@ -178,104 +169,85 @@
     let recipientData = null;
     let unsubscribeMessages = null;
     let authStateListener = null;
-
     // Function to load appropriate navbar based on user role
     function loadNavbar(userRole) {
       let navbarHTML = '';
-      
       if (userRole === 'doctor') {
         navbarHTML = `
-          <header class="bg-white shadow-sm border-b border-gray-200">
+          <header class="bg-primary-dark-blue shadow text-white sticky top-0 z-50">
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
               <div class="flex items-center justify-between w-full">
                 <a href="doctordashboard.html" class="flex items-center space-x-3">
-                  <img src="very new medicine.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="dermastreak Logo">
-                  <span class="font-extrabold text-slate-900 text-lg">AROYKYA SAHAYAK</span>
+                  <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo">
+                  <span class="font-extrabold text-lg">AROKYA SAHAYAK</span>
                 </a>
-                
-                <!-- Mobile menu button -->
                 <div class="flex md:hidden">
-                  <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none">
+                  <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                   </button>
                 </div>
-                
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-4 text-sm font-normal nav-links">
-                  <a href="doctordashboard.html" class="hover:text-green-600">Home</a>
-                  <a href="about2.html" class="hover:text-green-600">About</a>
-                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
-                  <a href="#" id="logoutBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</a>
+                <div class="hidden md:flex items-center space-x-1 text-sm font-normal nav-links">
+                  <a href="doctordashboard.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+                  <a href="about2.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm hover:bg-white hover:text-primary-dark-blue transition-colors">My Profile</a>
+                  <a href="#" id="logoutBtn" class="inline-flex items-center px-4 py-2 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-blue-800 transition-colors">Log Out</a>
                 </div>
               </div>
             </nav>
-            
-            <!-- Mobile menu (hidden by default) -->
-            <div class="mobile-menu hidden md:hidden bg-white px-4 py-4 border-t">
-              <a href="doctordashboard.html" class="block py-2 hover:text-green-600">Home</a>
-              <a href="about2.html" class="block py-2 hover:text-green-600">About</a>
-              <a href="profile.html" class="block py-2 hover:text-green-600">My Profile</a>
-              <a href="#" id="mobileLogoutBtn" class="block py-2 hover:text-green-600">Log Out</a>
+            <div class="mobile-menu hidden md:hidden bg-white px-4 py-4 border-t text-gray-800">
+              <a href="doctordashboard.html" class="block py-2 hover:text-primary-dark-blue">Home</a>
+              <a href="about2.html" class="block py-2 hover:text-primary-dark-blue">About</a>
+              <a href="profile.html" class="block py-2 hover:text-primary-dark-blue">My Profile</a>
+              <a href="#" id="mobileLogoutBtn" class="block py-2 hover:text-primary-dark-blue">Log Out</a>
             </div>
           </header>
         `;
       } else {
         // Default to patient navbar
         navbarHTML = `
-          <header class="bg-white shadow">
+          <header class="bg-primary-dark-blue shadow sticky top-0 z-50 text-white">
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
               <div class="flex items-center justify-between w-full">
                 <a href="patient.html" class="flex items-center space-x-3">
-                  <img src="very new medicine.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="dermastreak Logo">
-                  <span class="font-extrabold text-slate-900 text-lg">AROYKYA SAHAYAK</span>
+                  <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo">
+                  <span class="font-extrabold text-lg">AROKYA SAHAYAK</span>
                 </a>
-                
-                <!-- Mobile menu button -->
                 <div class="flex md:hidden">
-                  <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none">
+                  <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                   </button>
                 </div>
-                
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-4 text-sm font-normal nav-links">
-                  <a href="patient.html" class="hover:text-green-600 text-green-500">Home</a>
-                  <a href="about1.html" class="hover:text-green-600">About</a>
-                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-gray-50">My Profile</a>
-                  <a href="#" id="logoutBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">Log Out</a>
+                <div class="hidden md:flex items-center space-x-1 text-sm font-normal nav-links">
+                  <a href="patient.html" class="bg-primary-dark-blue px-3 py-2 rounded-md font-semibold">Home</a>
+                  <a href="about1.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+                  <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm hover:bg-white hover:text-primary-dark-blue transition-colors">My Profile</a>
+                  <a href="#" id="logoutBtn" class="inline-flex items-center px-4 py-2 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-blue-800 transition-colors">Log Out</a>
                 </div>
               </div>
             </nav>
-            
-            <!-- Mobile menu (hidden by default) -->
-            <div class="mobile-menu hidden md:hidden bg-white px-4 py-4 border-t">
-              <a href="patient.html" class="block py-2 hover:text-green-600">Home</a>
-              <a href="about1.html" class="block py-2 hover:text-green-600">About</a>
-              <a href="profile.html" class="block py-2 hover:text-green-600">My Profile</a>
-              <a href="#" id="mobileLogoutBtn" class="block py-2 hover:text-green-600">Log Out</a>
+            <div class="mobile-menu hidden md:hidden bg-white px-4 py-4 border-t text-gray-800">
+              <a href="patient.html" class="block py-2 hover:text-primary-dark-blue">Home</a>
+              <a href="about1.html" class="block py-2 hover:text-primary-dark-blue">About</a>
+              <a href="profile.html" class="block py-2 hover:text-primary-dark-blue">My Profile</a>
+              <a href="#" id="mobileLogoutBtn" class="block py-2 hover:text-primary-dark-blue">Log Out</a>
             </div>
           </header>
         `;
       }
-      
       headerContainer.innerHTML = navbarHTML;
-      
       // Add event listeners to the logout buttons
       const logoutBtn = document.getElementById('logoutBtn');
       const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-      
       if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
       }
-      
       if (mobileLogoutBtn) {
         mobileLogoutBtn.addEventListener('click', handleLogout);
       }
-      
       // Mobile menu toggle
       const mobileMenuButton = document.querySelector('.mobile-menu-button');
       if (mobileMenuButton) {
@@ -283,13 +255,11 @@
           document.querySelector('.mobile-menu').classList.toggle('active');
         });
       }
-      
       // Set back button destination based on role
       if (backButton) {
         backButton.href = userRole === 'doctor' ? 'doctordashboard.html' : 'patient.html';
       }
     }
-
     function handleLogout() {
       auth.signOut().then(() => {
         // Clear all storage
@@ -301,13 +271,11 @@
         alert("Logout failed: " + error.message);
       });
     }
-
     function formatTimestamp(timestamp) {
       if (!timestamp) return '';
       const date = timestamp.toDate();
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     }
-
     function showError(title, message) {
       loadingElement.classList.add('hidden');
       chatContainer.classList.add('hidden');
@@ -315,44 +283,35 @@
       document.getElementById('errorTitle').textContent = title;
       document.getElementById('errorMessage').textContent = message;
     }
-
     function renderMessage(message) {
       const isMyMessage = message.senderId === currentUser.uid;
       let senderIsDoctor;
-
       if (isMyMessage) {
           senderIsDoctor = isDoctor;
       } else {
           senderIsDoctor = !isDoctor;
       }
-      
-      const messageClass = senderIsDoctor ? 'doctor-message' : 'patient-message';
-      
+      const messageClass = isMyMessage ? 'patient-message' : 'doctor-message';
       const messageElement = document.createElement('div');
       messageElement.className = `p-3 ${messageClass}`;
       messageElement.innerHTML = `
         <div class="text-sm">${message.text}</div>
         <div class="message-time text-right">${formatTimestamp(message.timestamp)}</div>
       `;
-      
       messagesContainer.appendChild(messageElement);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-
    async function loadChatMessages() {
       const chatRef = db.collection('chats').doc(chatId);
-      
       try {
         await chatRef.set({
             participants: [currentUser.uid, recipientId],
         }, { merge: true });
-
         unsubscribeMessages = chatRef.collection('messages')
             .orderBy('timestamp', 'asc')
             .onSnapshot(snapshot => {
                 messagesContainer.innerHTML = '';
                 snapshot.forEach(doc => renderMessage(doc.data()));
-                
                 setTimeout(() => {
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 }, 100);
@@ -360,31 +319,24 @@
                 console.error("Error loading messages:", error);
                 showError("Chat Error", "Failed to load messages.");
             });
-        
         loadingElement.classList.add('hidden');
         chatContainer.classList.remove('hidden');
-
       } catch (error) {
         console.error("Error setting up chat:", error);
         showError("Chat Error", "Failed to initialize the chat session.");
       }
     }
-
     async function sendMessage(text) {
       if (!text.trim()) return;
-      
       const chatRef = db.collection('chats').doc(chatId);
       const messagesRef = chatRef.collection('messages');
-      
       const message = {
         text: text.trim(),
         senderId: currentUser.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       };
-      
       messageInput.value = ''; // Clear input immediately for better UX
       messageInput.disabled = true;
-      
       try {
         await messagesRef.add(message);
         await chatRef.update({
@@ -400,7 +352,6 @@
         messageInput.focus();
       }
     }
-
     async function getRecipientData() {
         try {
             const doc = await db.collection('users').doc(recipientId).get();
@@ -408,7 +359,6 @@
                 recipientData = doc.data();
                 const name = recipientData.name || (isDoctor ? "Patient" : "Doctor");
                 recipientName.textContent = isDoctor ? name : `Dr. ${name}`;
-
                 // Check if profilePicture exists and is not empty
                 if (recipientData.profilePicture) {
                     recipientAvatar.innerHTML = `<img src="${recipientData.profilePicture}" class="h-full w-full object-cover rounded-full" alt="${name}">`;
@@ -425,7 +375,6 @@
             recipientAvatar.innerHTML = `<i class="fas ${isDoctor ? 'fa-user' : 'fa-user-md'}"></i>`;
         }
     }
-
     async function getAppointmentData() {
       if (!appointmentId) {
           appointmentInfo.textContent = "General Chat";
@@ -443,56 +392,44 @@
          appointmentInfo.textContent = "Could not load appointment details";
       }
     }
-
     async function initializeChat() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         recipientId = urlParams.get('recipient');
         appointmentId = urlParams.get('appointment');
-        
         if (!recipientId) {
           return showError("Invalid Chat", "No recipient specified.");
         }
-        
         currentUser = auth.currentUser;
         if (!currentUser) {
           return (window.location.href = 'login.html');
         }
-        
         const userDoc = await db.collection('users').doc(currentUser.uid).get();
         if (!userDoc.exists) throw new Error("Current user profile not found");
-        
         const userData = userDoc.data();
         isDoctor = userData.role === 'doctor';
-        
         // Load appropriate navbar based on user role
         loadNavbar(userData.role || 'patient');
-        
         // Generate a consistent, sorted chat ID
         const ids = [currentUser.uid, recipientId].sort();
         chatId = ids.join('_');
-        
         await Promise.all([getRecipientData(), getAppointmentData()]);
         await loadChatMessages();
-
       } catch (error) {
         console.error("Error initializing chat:", error);
         showError("Initialization Error", "Failed to start the chat. Please go back and try again.");
       }
     }
-
     // Event listeners
     messageForm.addEventListener('submit', (e) => {
       e.preventDefault();
       sendMessage(messageInput.value);
     });
-
     // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
       if (unsubscribeMessages) unsubscribeMessages();
       if (authStateListener) authStateListener();
     });
-
     // Initialize when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
       authStateListener = auth.onAuthStateChanged(user => {
