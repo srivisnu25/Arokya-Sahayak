@@ -1,6 +1,3 @@
-
-<!-- patient.html -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -55,7 +52,6 @@
   </head>
 
   <body class="bg-[#f3f9ff] text-slate-900">
-    <!-- Header -->
     <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         <div class="flex items-center justify-between w-full">
@@ -68,7 +64,6 @@
             <span class="font-extrabold text-slate-900 text-base md:text-lg">AROYKYA SAHAYAK</span>
           </a>
           
-          <!-- Mobile menu button -->
           <div class="flex md:hidden">
             <button type="button" class="mobile-menu-button text-slate-700 hover:text-green-600 focus:outline-none p-2">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,7 +72,6 @@
             </button>
           </div>
           
-          <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center space-x-4 text-sm font-normal">
             <a href="patient.html" class="hover:text-green-600 text-green-500">Home</a>
             <a href="about1.html" class="hover:text-green-600">About</a>
@@ -87,7 +81,8 @@
               >My Profile</a
             >
             <a
-              href="home.html"
+              href="#"
+              onclick="logout()"
               class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >Log Out</a
             >
@@ -95,7 +90,6 @@
         </div>
       </nav>
       
-      <!-- Mobile menu -->
       <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t">
         <a href="patient.html" class="block py-3 text-green-500 border-b border-gray-100">Home</a>
         <a href="about1.html" class="block py-3 text-slate-700 hover:text-green-600 border-b border-gray-100">About</a>
@@ -113,9 +107,7 @@
         </div>
       </div>
     </header>
-    <!-- Dashboard Main -->
     <main class="max-w-7xl mx-auto px-4 py-12 space-y-10">
-      <!-- Welcome Section -->
       <div
         class="bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between"
       >
@@ -135,17 +127,10 @@
         />
       </div>
 
-  <!-- Welcome Section -->
   <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between">
     <div class="space-y-3">
-      <!-- <h1 class="text-3xl font-extrabold text-slate-900">Welcome, <span id="Welcome" class="text-green-600"></span> 👋</h1> -->
-       <h1 class="text-3xl font-extrabold text-slate-900">
-   <span id="welcome" class="text-green-600"></span> 
-</h1>
-
-      <!-- Dashboard Cards -->
+  
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Daily Upload -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
@@ -162,7 +147,6 @@
         </div>
 
 
-        <!-- AI Streak Analysis -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
@@ -178,7 +162,6 @@
           >
         </div>
 
-        <!-- Doctor Suggestions -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
@@ -193,8 +176,13 @@
             >View Suggestions</a
           >
         </div>
-
-        <!-- Reminders -->
+  <div class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4">
+        <i class="fas fa-robot text-green-600 text-4xl"></i>
+        <h3 class="font-bold text-xl">AI Symptom Diagnosis</h3>
+        <p class="text-slate-600 text-sm">Describe your symptoms to our AI for a preliminary analysis.</p>
+        <a id="chatbot-link" href="chatbot.html" class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">Start Chat</a>
+      </div>
+      
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
@@ -210,42 +198,32 @@
           >
         </div>
 
-        <!-- Product Rating -->
-        <div
-          class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
-        >
-          <i class="fas fa-star text-green-600 text-4xl"></i>
-          <h3 class="font-bold text-xl">Rate Products</h3>
-          <p class="text-slate-600 text-sm">
-            Help others by rating skincare products after usage.
-          </p>
-          <a
-            href="#"
-            class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
-            >Rate Now</a
-          >
-        </div>
+        <div class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl text-center space-y-4">
+                <i class="fas fa-box text-green-600 text-4xl"></i>
+                <h3 class="font-bold text-xl">My Orders</h3>
+                <p class="text-slate-600 text-sm">Track the status of your medicine orders.</p>
+                <a id="my-orders-link" href="my-orders.html" class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700">View Orders</a>
+            </div>
 
-        <!-- Chat with Doctor -->
         <div
           class="dashboard-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl cursor-pointer text-center space-y-4"
         >
-          <i class="fas fa-comments text-green-600 text-4xl"></i>
-          <h3 class="font-bold text-xl">Chat with Doctor</h3>
+          <i class="fas fa-pills text-green-600 text-4xl"></i>
+          <h3 class="font-bold text-xl">view medicines</h3>
           <p class="text-slate-600 text-sm">
-            Quickly connect with your dermatologist for any queries.
+            view your medicines prescribed by doctor.
           </p>
           <a
-            href="chat.html"
+            id="view-medicine-link"
+            href="medicine.html"
             class="inline-block mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700"
-            >Start Chat</a
+            >View Medicine</a
           >
         </div>
       </div>
     </main>
 
-    <!-- Footer -->
- <footer
+    <footer
       class="w-full bg-[#0a1e3a] border-t border-gray-700 py-10 text-slate-300"
     >
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
@@ -258,7 +236,7 @@
             />
           </div>
           <p class="text-sm leading-relaxed">
-           AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
+            AROYKYA SAHAYAK is your trusted AI-powered dermatology tracker — track
             skin progress, get tips, and consult top dermatologists from the
             comfort of your home.
           </p>
@@ -319,9 +297,6 @@
       </div>
     </footer>
 
-    <!-- Username Script -->
-     
-    <!-- Mobile menu toggle functionality -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -360,7 +335,6 @@
     document.getElementById("welcome").innerText = username || "User";
   </script>
 
-  <!-- Firebase Logout Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -379,10 +353,10 @@
 
 //for display the user name
 
- 
+  
   function displayUsername() {
-    const welcomeEl = document.getElementById("welcome");
-    if (!welcomeEl) return;
+    const welcomeElements = document.querySelectorAll("#welcome"); // Select all elements with id="welcome"
+    if (welcomeElements.length === 0) return;
 
     // Check for username in this order:
     // 1. URL parameters (immediate redirect)
@@ -398,12 +372,34 @@
     // 4. Firebase Auth (if page refreshed)
     const authName = auth.currentUser?.displayName;
 
-    welcomeEl.textContent = urlName || sessionName || localName || authName || "User";
+    const nameToDisplay = urlName || sessionName || localName || authName || "User";
+
+    // Update all welcome elements
+    welcomeElements.forEach(el => {
+        el.textContent = nameToDisplay;
+    });
   }
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      displayUsername();
+        const patientId = user.uid; // Get the user's ID
+        displayUsername();
+
+        // Find the link and update its href attribute
+        const medicineLink = document.getElementById('view-medicine-link');
+        if (medicineLink) {
+            medicineLink.href = `medicine.html?patientId=${patientId}`;
+        }
+         // **NEW: Update the "My Orders" link**
+        const myOrdersLink = document.getElementById('my-orders-link');
+        if (myOrdersLink) {
+        myOrdersLink.href = `my-orders.html?patientId=${patientId}`;
+        }
+         // **NEW: Update the Chatbot link with the patient's ID**
+        const chatbotLink = document.getElementById('chatbot-link');
+        if (chatbotLink) {
+          chatbotLink.href = `chatbot.html?patientId=${patientId}`;
+        }
     } else {
       window.location.href = "login.html";
     }
@@ -423,4 +419,4 @@ window.logout = async function() {
 };
   </script>
   </body>
-</html> 
+</html>

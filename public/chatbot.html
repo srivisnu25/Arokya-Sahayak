@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arokya Sahayak - AI Symptom Diagnosis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chat-container {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .user-message {
+            animation: slideInRight 0.3s ease-in-out;
+        }
+        .bot-message {
+            animation: slideInLeft 0.3s ease-in-out;
+        }
+        .dot-flashing {
+            position: relative;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: #004B80;
+            color: #004B80;
+            animation: dotFlashing 1s infinite linear alternate;
+            animation-delay: .5s;
+        }
+        .dot-flashing::before, .dot-flashing::after {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+        }
+        .dot-flashing::before {
+            left: -15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: #004B80;
+            color: #004B80;
+            animation: dotFlashing 1s infinite alternate;
+            animation-delay: 0s;
+        }
+        .dot-flashing::after {
+            left: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: #004B80;
+            color: #004B80;
+            animation: dotFlashing 1s infinite alternate;
+            animation-delay: 1s;
+        }
+        @keyframes dotFlashing {
+            0% {
+                background-color: #004B80;
+            }
+            50%, 100% {
+                background-color: #cbd5e1;
+            }
+        }
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Custom colors from doctors page */
+        .color-primary-dark-blue { color: #01579B; }
+        .bg-primary-dark-blue { background-color: #01579B; }
+        .color-primary-light-blue { color: #00AEEF; }
+        .bg-primary-light-blue { background-color: #00AEEF; }
+        
+        /* Mobile menu styles */
+        .mobile-menu {
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .mobile-menu.active {
+            display: block;
+            max-height: 500px;
+        }
+        .mobile-menu-button {
+            transition: transform 0.3s ease;
+        }
+        .mobile-menu-button.active {
+            transform: rotate(90deg);
+        }
+        .btn-scale {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        .btn-scale:hover,
+        .btn-scale:focus {
+            transform: scale(1.05);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header from doctors page -->
+    <header class="bg-primary-dark-blue shadow sticky top-0 z-50 text-white">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+            <div class="flex items-center justify-between w-full">
+                <a href="patient.html" class="flex items-center space-x-3">
+                    <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo">
+                    <span class="font-extrabold text-base md:text-lg">AROKYA SAHAYAK</span>
+                </a>
+                
+                <div class="flex md:hidden">
+                    <button type="button" class="mobile-menu-button text-white hover:text-gray-200 focus:outline-none p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-1 text-sm font-normal">
+                    <a href="patient.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">Home</a>
+                    <a href="about1.html" class="hover:bg-primary-light-blue px-3 py-2 rounded-md transition-colors">About</a>
+                    <a href="profile.html" class="inline-flex items-center px-4 py-2 border border-white rounded-md shadow-sm hover:bg-white hover:text-primary-dark-blue transition-colors">My Profile</a>
+                    <a href="#" onclick="logout()" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-blue-800 transition-colors">Log Out</a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="mobile-menu md:hidden bg-white px-4 py-4 border-t text-gray-800">
+            <a href="patient.html" class="block py-3 text-primary-dark-blue font-semibold border-b border-gray-100">Home</a>
+            <a href="about1.html" class="block py-3 hover:text-primary-dark-blue border-b border-gray-100">About</a>
+            <div class="mt-4 space-y-3">
+                <a href="profile.html" class="block text-center py-3 border border-gray-300 rounded-md bg-white hover:bg-gray-50">My Profile</a>
+                <a href="#" onclick="logout()" class="block text-center py-3 border border-transparent font-semibold rounded-md shadow-sm text-white bg-primary-light-blue hover:bg-primary-dark-blue transition-colors">Log Out</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content area with chatbot -->
+    <main class="flex items-center justify-center min-h-[calc(100vh-200px)] py-8">
+        <div class="chat-container w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-lg flex flex-col h-[70vh]">
+            <div class="text-white p-4 rounded-t-2xl flex justify-between items-center" style="background-color: #004B80;">
+                <div class="flex items-center gap-4">
+                    <img src="Pure_White_Chatbot.png" alt="Arokya Sahayak Logo" class="h-10 w-10">
+                    <div>
+                        <h1 class="text-xl font-bold">Arokya Sahayak</h1>
+                        <p class="text-sm opacity-80">Your personal health assistant - AS-GPT</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <select id="language-selector" class="text-white rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-white" style="background-color: #005a99;">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="pa">ਪੰਜਾਬੀ</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="chat-box" class="flex-1 p-6 overflow-y-auto">
+                <div class="bot-message mb-4">
+                    <div class="flex items-start gap-3">
+                         <img src="Chatbot.png" alt="AS-GPT Avatar" class="h-8 w-8 rounded-full flex-shrink-0">
+                        <div class="bg-gray-200 rounded-lg p-3 max-w-xs md:max-w-md">
+                            <p class="text-sm text-gray-800" id="welcome-message">Hello! I'm AS-GPT, your AI health assistant. Please describe your symptoms. Remember, this is not a substitute for professional medical advice.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="typing-indicator" class="p-6 hidden">
+                 <div class="bot-message">
+                    <div class="flex items-start gap-3">
+                        <img src="Chatbot.png" alt="AS-GPT Avatar" class="h-8 w-8 rounded-full flex-shrink-0">
+                        <div class="bg-gray-200 rounded-lg p-4 max-w-xs md:max-w-md flex items-center">
+                            <div class="dot-flashing"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+                <div class="flex items-center space-x-3">
+                    <input type="text" id="user-input" class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2" placeholder="Type your symptoms..." style="--tw-ring-color: #004B80;">
+                    <button id="send-btn" class="text-white rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: #004B80; --tw-ring-color: #004B80;" onmouseover="this.style.backgroundColor='#005a99'" onmouseout="this.style.backgroundColor='#004B80'">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer from doctors page -->
+    <footer class="w-full bg-primary-dark-blue border-t border-primary-dark-blue py-10 text-white">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+            <div>
+                <div class="w-16 h-16 mb-4 rounded-full overflow-hidden">
+                    <img src="as.jpg" class="h-full w-full object-cover" alt="AROKYA SAHAYAK Logo">
+                </div>
+                <p class="text-sm leading-relaxed">
+                    AROKYA SAHAYAK is your trusted partner for accessible healthcare — connect with top doctors, manage appointments, and get expert medical advice right from your home.
+                </p>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="patient.html" class="hover:text-primary-light-blue transition-colors">Home</a></li>
+                    <li><a href="about1.html" class="hover:text-primary-light-blue transition-colors">About Us</a></li>
+                    <li><a href="services1.html" class="hover:text-primary-light-blue transition-colors">Our Services</a></li>
+                    <li><a href="blog1.html" class="hover:text-primary-light-blue transition-colors">Health Blog</a></li>
+                    <li><a href="contact1.html" class="hover:text-primary-light-blue transition-colors">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-lg mb-4">Contact Us</h3>
+                <p class="text-sm">📍 Tamil Nadu, India</p>
+                <p class="text-sm mt-2">📞 +91 98765 43210</p>
+                <p class="text-sm mt-2">✉️ support@arokyasahayak.com</p>
+                <p class="text-sm mt-2">Mon - Fri: 9 AM - 6 PM</p>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-lg mb-4">Legal & Social</h3>
+                <ul class="space-y-2 text-sm mb-4">
+                    <li><a href="privacy.html" class="hover:text-primary-light-blue transition-colors">Privacy Policy</a></li>
+                    <li><a href="terms.html" class="hover:text-primary-light-blue transition-colors">Terms & Conditions</a></li>
+                </ul>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-primary-light-blue transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-slate-700 mt-10 pt-6 text-center text-sm text-gray-300 px-6">
+            © 2025 AROKYA SAHAYAK. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+            authDomain: "dermastreak-2caae.firebaseapp.com",
+            projectId: "dermastreak-2caae",
+            storageBucket: "dermastreak-2caae.appspot.com",
+            messagingSenderId: "32726012100",
+            appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Chatbot functionality
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const languageSelector = document.getElementById('language-selector');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const welcomeMessage = document.getElementById('welcome-message');
+
+        let chatHistory = [];
+        let currentLanguage = 'en';
+
+        const translations = {
+            en: {
+                welcome: "Hello! I'm AS-GPT, your AI health assistant. Please describe your symptoms. Remember, this is not a substitute for professional medical advice.",
+                placeholder: "Type your symptoms..."
+            },
+            hi: {
+                welcome: "नमस्ते! मैं AS-GPT, आपका एआई स्वास्थ्य सहायक हूँ। कृपया अपने लक्षण बताएं। याद रखें, यह पेशेवर चिकित्सा सलाह का विकल्प नहीं है।",
+                placeholder: "अपने लक्षण टाइप करें..."
+            },
+            pa: {
+                welcome: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ AS-GPT, ਤੁਹਾਡਾ AI ਸਿਹਤ ਸਹਾਇਕ ਹਾਂ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਲੱਛਣਾਂ ਦਾ ਵਰਣਨ ਕਰੋ। ਯਾਦ ਰੱਖੋ, ਇਹ ਪੇਸ਼ੇਵਰ ਡਾਕਟਰੀ ਸਲਾਹ ਦਾ ਬਦਲ ਨਹੀਂ ਹੈ।",
+                placeholder: "ਆਪਣੇ ਲੱਛਣ ਟਾਈਪ ਕਰੋ..."
+            }
+        };
+
+        const updateLanguage = () => {
+            currentLanguage = languageSelector.value;
+            welcomeMessage.textContent = translations[currentLanguage].welcome;
+            userInput.placeholder = translations[currentLanguage].placeholder;
+            // Clear chat and reset with new welcome message
+            chatBox.innerHTML = `
+                <div class="bot-message mb-4">
+                    <div class="flex items-start gap-3">
+                        <img src="Chatbot.png" alt="AS-GPT Avatar" class="h-8 w-8 rounded-full flex-shrink-0">
+                        <div class="bg-gray-200 rounded-lg p-3 max-w-xs md:max-w-md">
+                            <p class="text-sm text-gray-800">${translations[currentLanguage].welcome}</p>
+                        </div>
+                    </div>
+                </div>`;
+            chatHistory = [];
+        };
+
+        languageSelector.addEventListener('change', updateLanguage);
+
+        const addMessage = (message, sender) => {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message', 'mb-4');
+
+            if (sender === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="flex items-end justify-end">
+                        <div class="text-white rounded-lg p-3 max-w-xs md:max-w-md" style="background-color: #004B80;">
+                            <p class="text-sm">${message}</p>
+                        </div>
+                    </div>`;
+            } else {
+                 messageDiv.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <img src="Chatbot.png" alt="AS-GPT Avatar" class="h-8 w-8 rounded-full flex-shrink-0">
+                        <div class="bg-gray-200 rounded-lg p-3 max-w-xs md:max-w-md">
+                            <p class="text-sm text-gray-800">${message}</p>
+                        </div>
+                    </div>`;
+            }
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
+        const handleUserInput = async () => {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            // --- CORRECTED LOGIC: Check for redirection trigger ---
+            if (message.toLowerCase().trim().startsWith('yes')) {
+                const lastBotMessage = chatHistory.findLast(m => m.role === 'model');
+                if (lastBotMessage) {
+                    const lastBotText = lastBotMessage.parts[0].text;
+                    // Use a regular expression to find "specialist:Value"
+                    const match = lastBotText.match(/specialist:(\w+)/);
+                    
+                    if (match && match[1]) {
+                        const specialization = match[1];
+                        // Redirect to the doctor suggestion page with the specialization
+                        window.location.href = `doctor-suggestion.html?specialization=${specialization}`;
+                        return; // Stop processing to prevent a new AI call
+                    }
+                }
+            }
+            // --- END OF CORRECTED LOGIC ---
+
+            typingIndicator.classList.remove('hidden');
+
+            chatHistory.push({ role: "user", parts: [{ text: message }] });
+
+            try {
+                const botResponse = await getAIBotResponse(message);
+                typingIndicator.classList.add('hidden');
+                addMessage(botResponse, 'bot');
+                // Store the raw bot response (with the specialist tag) in the history
+                chatHistory.push({ role: "model", parts: [{ text: botResponse.replace(/<br>/g, '\n') }] });
+            } catch (error) {
+                typingIndicator.classList.add('hidden');
+                const errorMessage = `Sorry, something went wrong. Please try again. Error: ${error.message}`;
+                addMessage(errorMessage, 'bot');
+                console.error('API Request Error:', error);
+            }
+        };
+
+        const getAIBotResponse = async (userMessage) => {
+             // Your new Google AI Studio API key is now included.
+             const apiKey = "AIzaSyDMUi-RlXFDPo22q6HySG6HKdO50UJOuRU"; 
+             
+             if (!apiKey || apiKey === "YOUR_GOOGLE_AI_API_KEY_HERE") {
+                throw new Error("API key is missing. Please add your API key.");
+             }
+
+             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+             const systemPrompt = `You are AS-GPT, an AI medical assistant for users in Nabha, Punjab. Your role is to analyze user-described symptoms and provide potential diagnoses and suggest the appropriate type of doctor to consult.
+- **IMPORTANT: Your primary function is to act as a medical assistant. If the user's query is not related to health, symptoms, or medical conditions, you must politely decline to answer. For example, if asked "who are you?" or "what is the capital of France?", you should respond with something like: "I am a health assistant and can only help with medical-related questions." Do not answer non-medical questions.**
+- Always communicate in the language the user is using (current language: ${currentLanguage}).
+- Ask clarifying questions to get more details about the symptoms.
+- Provide a list of possible conditions based on the symptoms.
+- For each condition, briefly explain why it might be a possibility.
+- Suggest the type of medical specialist to consult.
+- **CRITICAL:** When you provide the specialist suggestion, you MUST format it on a new line like this: \`specialist:name_of_specialist\` (e.g., \`specialist:Dermatologist\`). Do not include any other text on this line.
+- **Crucially, always include a disclaimer that you are an AI and not a real doctor, and the user must consult a qualified healthcare professional for an accurate diagnosis.**
+- Format your response clearly using markdown for readability (e.g., bolding, bullet points).
+- Do not provide any medical advice or prescribe any treatment. Your scope is limited to symptom analysis and doctor suggestion.
+- **After providing the diagnosis and doctor suggestion, you MUST include a section titled 'Emergency Score'.**
+- **Under this title, assign an Emergency Rating on a scale of 1 to 10 based on the potential severity of the described symptoms.** Use the following scale:
+    - **1–3 (Low Urgency):** Minor issue, likely self-manageable, can wait for a routine consultation.
+    - **4–6 (Moderate Urgency):** You should consult a doctor soon, but it's not a critical emergency.
+    - **7–8 (High Urgency):** Requires prompt medical attention, preferably within a few hours.
+    - **9–10 (Emergency):** Potentially life-threatening. An immediate visit to the Emergency Room (ER) or hospital is necessary.
+- **Clearly explain the reason for the rating you have assigned.**
+- **Provide clear next-step guidance based on the rating. For high or emergency ratings (7-10) in Nabha, Punjab, your guidance MUST include the following: 'Please seek immediate medical attention. In Nabha, you can call 108 for emergency medical services (ambulance) or 102 for patient transport. Do not delay.'** For lower scores, suggest scheduling an appointment.
+- **Always prioritize patient safety and err on the side of caution when assigning a score.**
+- **After providing the score and guidance, ask the user: "Would you like me to help you find a doctor nearby?"**`;
+             
+             const payload = {
+                 contents: [
+                     ...chatHistory,
+                 ],
+                  systemInstruction: {
+                     parts: [{ text: systemPrompt }]
+                 },
+             };
+
+             const response = await fetch(apiUrl, {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify(payload)
+             });
+
+             if (!response.ok) {
+                 throw new Error(`Request failed with status ${response.status}`);
+             }
+
+             const result = await response.json();
+             if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
+                 return result.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
+             } else {
+                return "I'm having trouble understanding. Could you please rephrase?";
+             }
+        };
+
+        sendBtn.addEventListener('click', handleUserInput);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserInput();
+            }
+        });
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            if(mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                    mobileMenuButton.classList.toggle('active');
+                    
+                    // Change icon when menu is open/closed
+                    const icon = mobileMenuButton.querySelector('svg');
+                    if (mobileMenu.classList.contains('active')) {
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+                    } else {
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                    }
+                });
+            }
+            
+            // Check auth state
+            auth.onAuthStateChanged(user => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+
+        // Logout function
+        window.logout = function() {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            }).catch(error => {
+                console.error("Logout failed: " + error.message);
+            });
+        };
+
+        // Initial setup
+        updateLanguage();
+    </script>
+</body>
+</html>

@@ -121,12 +121,13 @@
           <option value="" disabled selected>Select your role</option>
           <option value="patient">Patient</option>
           <option value="doctor">Doctor</option>
+          <option value="pharmacy">Pharmacy</option>
         </select>
       </div>
 
       <div id="common-fields" class="hidden space-y-6">
         <div>
-          <label class="block mb-2 font-medium text-gray-700">Profile Picture</label>
+          <label class="block mb-2 font-medium text-gray-700">Profile Picture / Pharmacy Logo</label>
           <div class="flex items-center gap-4">
             <img id="profilePreview" src="" class="hidden h-20 w-20 rounded-full object-cover border-2 border-gray-200 bg-gray-100">
             <label for="profilePicture" class="cursor-pointer bg-primary-dark-blue text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition inline-block text-sm font-medium">
@@ -137,14 +138,14 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <input name="name" type="text" placeholder="Full Name" required class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
+          <input name="name" type="text" placeholder="Full Name (or Contact Person)" required class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
           <input name="email" type="email" placeholder="Email" required class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
           <input name="phone" type="tel" placeholder="Phone Number" required class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
           <input name="age" type="number" placeholder="Age" min="0" required class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
           <select name="gender" required class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm bg-white">
             <option value="" disabled selected>Gender</option><option>Male</option><option>Female</option><option>Other</option>
           </select>
-          <div></div>
+          <input name="address" type="text" placeholder="Address" required class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
           <input name="password" type="password" placeholder="Password (min. 6 characters)" required minlength="6" class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
           <input name="confirmPassword" type="password" placeholder="Confirm Password" required minlength="6" class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
         </div>
@@ -161,6 +162,17 @@
             <input name="clinics" type="text" placeholder="Affiliated Clinics/Hospitals (comma separated)" class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm md:col-span-2">
         </div>
       </div>
+      
+      <div id="pharmacy-fields" class="hidden space-y-6 pt-4 border-t">
+        <h3 class="text-lg font-semibold color-primary-dark-blue">Pharmacy Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <input name="pharmacyName" type="text" placeholder="Pharmacy Name" class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm md:col-span-2">
+            <input name="pharmacyOwner" type="text" placeholder="Pharmacy Owner Name" class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
+            <input name="pharmacyHours" type="text" placeholder="Operating Hours (e.g., 9 AM - 9 PM)" class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm">
+            <input name="pharmacyAddress" type="text" placeholder="Pharmacy Full Address" class="border border-gray-300 rounded-lg px-4 py-3 shadow-sm md:col-span-2">
+        </div>
+      </div>
+
 
       <p id="error-message" class="text-red-600 text-center font-medium"></p>
 
@@ -238,7 +250,6 @@
 </script>
 
 <script type="module">
-  // All functionality remains exactly the same as provided.
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
   import { 
     getAuth, 
@@ -286,8 +297,39 @@
 
   window.toggleFields = function() {
     const role = document.getElementById("role").value;
-    document.getElementById("common-fields").classList.toggle("hidden", role === "");
-    document.getElementById("doctor-fields").classList.toggle("hidden", role !== "doctor");
+    const commonFields = document.getElementById("common-fields");
+    const doctorFields = document.getElementById("doctor-fields");
+    const pharmacyFields = document.getElementById("pharmacy-fields");
+
+    commonFields.classList.toggle("hidden", role === "");
+    doctorFields.classList.toggle("hidden", role !== "doctor");
+    pharmacyFields.classList.toggle("hidden", role !== "pharmacy");
+
+    const ageInput = document.querySelector('input[name="age"]');
+    const genderSelect = document.querySelector('select[name="gender"]');
+    const addressInput = document.querySelector('input[name="address"]');
+    
+    if (ageInput && genderSelect && addressInput) {
+        const isPharmacy = role === 'pharmacy';
+        
+        // Hide age and gender for pharmacy users
+        ageInput.classList.toggle('hidden', isPharmacy);
+        genderSelect.classList.toggle('hidden', isPharmacy);
+        
+        // Hide the general address field for pharmacy users (they have a separate pharmacy address field)
+        addressInput.classList.toggle('hidden', isPharmacy);
+
+        // Make them not required when hidden
+        if (isPharmacy) {
+            ageInput.required = false;
+            genderSelect.required = false;
+            addressInput.required = false;
+        } else {
+            ageInput.required = true;
+            genderSelect.required = true;
+            addressInput.required = true;
+        }
+    }
   }
 
   async function uploadImageToCloudinary(file) {
@@ -329,10 +371,9 @@
       const email = form.email.value;
       const password = form.password.value;
       const confirmPassword = form.confirmPassword.value;
-      const name = form.name.value;
-      const gender = form.gender.value;
-      const age = form.age.value;
+      const name = form.name.value; // For patient/doctor/pharmacy contact
       const phone = form.phone.value;
+      const address = form.address.value; // Get the address value
       const profilePictureFile = form.profilePicture.files[0];
 
       if (password !== confirmPassword) {
@@ -346,22 +387,28 @@
         profilePictureUrl = await uploadImageToCloudinary(profilePictureFile);
       }
 
+      const displayName = (role === 'pharmacy') ? form.pharmacyName.value : name;
       await updateProfile(userCred.user, { 
-        displayName: name,
+        displayName: displayName,
         photoURL: profilePictureUrl || null
       });
 
       const userData = {
         uid: userCred.user.uid,
         role,
-        name,
         email,
-        gender,
-        age: parseInt(age),
         phone,
         profilePicture: profilePictureUrl || "",
         createdAt: serverTimestamp()
       };
+      
+      // Add address to user data for all roles
+      if (role === 'patient' || role === 'doctor') {
+        userData.name = name;
+        userData.gender = form.gender.value;
+        userData.age = parseInt(form.age.value);
+        userData.address = address; // Store address for patients and doctors
+      }
 
       if (role === 'doctor') {
         userData.languagesSpoken = form.languagesSpoken.value.split(',').map(item => item.trim());
@@ -371,20 +418,33 @@
         userData.mrn = form.mrn.value;
         userData.clinics = form.clinics.value.split(',').map(item => item.trim());
       }
+      
+      if (role === 'pharmacy') {
+        userData.contactName = name; 
+        userData.pharmacyName = form.pharmacyName.value;
+        userData.pharmacyOwner = form.pharmacyOwner.value;
+        userData.pharmacyAddress = form.pharmacyAddress.value; // Store pharmacy address
+        userData.pharmacyHours = form.pharmacyHours.value;
+        // For pharmacy, we don't store the general address field
+      }
 
       await setDoc(doc(db, "users", userCred.user.uid), userData);
 
-      sessionStorage.setItem('username', name);
-      localStorage.setItem('username', name);
+      sessionStorage.setItem('username', displayName);
+      localStorage.setItem('username', displayName);
       localStorage.setItem('userRole', role);
 
-      errorMsg.className = "color-primary-dark-blue font-medium";
+      errorMsg.className = "text-center color-primary-dark-blue font-medium";
       errorMsg.textContent = "Registration successful! Redirecting...";
       
       setTimeout(() => {
-        window.location.href = role === "doctor" 
-          ? `doctordashboard.html?name=${encodeURIComponent(name)}&role=doctor`
-          : `patient.html?name=${encodeURIComponent(name)}&role=patient`;
+        if (role === "doctor") {
+            window.location.href = `doctordashboard.html?name=${encodeURIComponent(name)}&role=doctor`;
+        } else if (role === "pharmacy") {
+            window.location.href = `pharmacy.html?name=${encodeURIComponent(form.pharmacyName.value)}&role=pharmacy`;
+        } else {
+            window.location.href = `patient.html?name=${encodeURIComponent(name)}&role=patient`;
+        }
       }, 1500);
 
     } catch (error) {
@@ -407,6 +467,5 @@
 
   window.onload = toggleFields;
 </script>
-
 </body>
 </html>

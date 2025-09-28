@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Pharmacy Dashboard | AROYKYA SAHAYAK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        .dashboard-card:hover {
+            transform: scale(1.03);
+            transition: transform 0.3s;
+        }
+        .btn-scale {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        .btn-scale:hover, .btn-scale:focus {
+            transform: scale(1.05);
+            outline: none;
+        }
+        /* Modal Styles */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        /* Custom colors matching the login page */
+        .header-bg { background-color: #01579B; }
+        .footer-bg { background-color: #01579B; }
+        .btn-primary {
+            background-color: #00AEEF;
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #008fcc;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-slate-900 flex flex-col min-h-screen">
+    <header class="header-bg shadow-sm sticky top-0 z-50 text-white">
+        <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+            <div class="flex items-center space-x-3">
+                <img src="as.jpg" class="h-10 w-10 md:h-12 md:w-12 rounded-full" alt="AROKYA SAHAYAK Logo" />
+                <span class="font-extrabold text-white text-base md:text-lg">AROKYA SAHAYAK</span>
+            </div>
+            <div class="flex items-center space-x-4 text-sm font-normal">
+                <a href="#" onclick="logout()" class="inline-flex btn-scale items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white btn-primary">Log Out</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 md:py-12 space-y-10 flex-grow">
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between">
+            <div class="space-y-3 text-center md:text-left mb-6 md:mb-0">
+                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">
+                    Welcome, <span id="welcome" class="text-blue-600">Pharmacy</span> 👋
+                </h1>
+                <p class="text-slate-600">
+                    Manage your medicine inventory and view incoming orders.
+                </p>
+            </div>
+            <img src="as.jpg" class="w-28 md:w-36" alt="Pharmacy Illustration" />
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg space-y-6">
+                <h2 class="text-xl font-bold text-slate-800 border-b pb-3">Manage Medicine Inventory</h2>
+                
+                <form id="add-medicine-form" class="space-y-4">
+                    <h3 class="font-semibold">Add New Medicine</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="medicineName" placeholder="Medicine Name" required class="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <input type="number" id="medicineStock" placeholder="Stock Quantity" required class="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" min="0">
+                        <input type="number" id="medicinePrice" placeholder="Price (₹)" required class="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" min="0" step="0.01">
+                    </div>
+                     <div>
+                        <label for="medicineImage" class="block text-sm font-medium text-gray-700">Medicine Image (Optional)</label>
+                        <input type="file" id="medicineImage" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+                    <button type="submit" id="add-medicine-btn" class="w-full md:w-auto px-6 py-2 btn-primary font-semibold rounded-lg shadow-md transition-colors">Add to Inventory</button>
+                </form>
+
+                <div class="space-y-4 pt-4">
+                    <h3 class="font-semibold">Current Stock</h3>
+                    <div id="inventory-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                        <p id="loading-inventory" class="text-slate-500">Loading inventory...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg space-y-4">
+                    <h2 class="text-xl font-bold text-slate-800 border-b pb-3">Pharmacy Profile</h2>
+                    <div id="profile-details" class="text-slate-600 space-y-2">
+                        <p><strong>Owner:</strong> <span id="profile-owner">Loading...</span></p>
+                        <p><strong>Address:</strong> <span id="profile-address">Loading...</span></p>
+                        <p><strong>Hours:</strong> <span id="profile-hours">Loading...</span></p>
+                        <p><strong>Contact:</strong> <span id="profile-contact">Loading...</span></p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg space-y-4">
+                    <h2 class="text-xl font-bold text-slate-800 border-b pb-3">Recent Orders</h2>
+                    <div id="orders-list" class="space-y-4 max-h-96 overflow-y-auto pr-1">
+                       <p id="loading-orders">Loading new orders...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="w-full footer-bg py-10 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto text-center text-sm text-slate-400 px-6">
+            © 2025 AROKYA SAHAYAK. All rights reserved.
+        </div>
+    </footer>
+
+    <div id="update-modal" class="hidden fixed w-full h-full top-0 left-0 items-center justify-center z-50 bg-black bg-opacity-50">
+        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded-lg shadow-lg z-50">
+            <div class="modal-content py-4 text-left px-6">
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Update Medicine</p>
+                    <button id="close-modal-btn" class="modal-close cursor-pointer z-50 p-2"><i class="fas fa-times"></i></button>
+                </div>
+                <form id="update-medicine-form" class="space-y-4">
+                    <input type="hidden" id="updateMedicineId">
+                    <div>
+                        <label class="font-semibold">Medicine Name</label>
+                        <input type="text" id="updateMedicineName" readonly class="w-full bg-gray-100 border border-gray-300 rounded-lg px-4 py-2">
+                    </div>
+                    <div>
+                        <label class="font-semibold">New Stock Quantity</label>
+                        <input type="number" id="updateMedicineStock" required class="w-full border border-gray-300 rounded-lg px-4 py-2" min="0">
+                    </div>
+                     <div>
+                        <label class="font-semibold">New Price (₹)</label>
+                        <input type="number" id="updateMedicinePrice" required class="w-full border border-gray-300 rounded-lg px-4 py-2" min="0" step="0.01">
+                    </div>
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" class="px-6 py-2 btn-primary font-semibold rounded-lg">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        const CLOUD_NAME = "dm72qhrol";
+        const UPLOAD_PRESET = "dermastreak_uploads";
+        const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoScNEhiFNdljF9D_BK8aBGuJiJ9XpX8o",
+            authDomain: "dermastreak-2caae.firebaseapp.com",
+            projectId: "dermastreak-2caae",
+            storageBucket: "dermastreak-2caae.appspot.com",
+            messagingSenderId: "32726012100",
+            appId: "1:32726012100:web:b5a2071c3ecea58810b991"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentPharmacyId = null;
+        let currentPharmacyName = "Pharmacy";
+        let currentPharmacyHours = "N/A";
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                currentPharmacyId = user.uid;
+                displayUsername();
+                fetchPharmacyProfile(user.uid);
+                fetchInventory(user.uid);
+                fetchOrders(user.uid);
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        function displayUsername() {
+            const welcomeEl = document.getElementById("welcome");
+            const sessionName = sessionStorage.getItem('username');
+            currentPharmacyName = sessionName || auth.currentUser?.displayName || "Pharmacy";
+            welcomeEl.textContent = currentPharmacyName;
+        }
+
+        async function fetchPharmacyProfile(uid) {
+            const userDocRef = doc(db, "users", uid);
+            const userDocSnap = await getDoc(userDocRef);
+            if (userDocSnap.exists()) {
+                const data = userDocSnap.data();
+                currentPharmacyHours = data.pharmacyHours || "N/A";
+                document.getElementById("profile-owner").textContent = data.pharmacyOwner || 'N/A';
+                document.getElementById("profile-address").textContent = data.pharmacyAddress || 'N/A';
+                document.getElementById("profile-hours").textContent = currentPharmacyHours;
+                document.getElementById("profile-contact").textContent = data.phone || 'N/A';
+            }
+        }
+
+        window.logout = async () => {
+            await signOut(auth);
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = "home.html";
+        };
+
+        const addMedicineForm = document.getElementById('add-medicine-form');
+        addMedicineForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const addButton = document.getElementById('add-medicine-btn');
+            addButton.disabled = true;
+            addButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Adding...`;
+            
+            const name = document.getElementById('medicineName').value.trim();
+            const stock = parseInt(document.getElementById('medicineStock').value);
+            const price = parseFloat(document.getElementById('medicinePrice').value);
+            const imageFile = document.getElementById('medicineImage').files[0];
+
+            if (!name || isNaN(stock) || isNaN(price) || !currentPharmacyId) {
+                 alert("Please fill out all fields correctly.");
+                 addButton.disabled = false;
+                 addButton.textContent = 'Add to Inventory';
+                 return;
+            }
+
+            try {
+                let imageUrl = null;
+                if (imageFile) {
+                    const formData = new FormData();
+                    formData.append('file', imageFile);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+                    const res = await fetch(UPLOAD_URL, { method: 'POST', body: formData });
+                    if (!res.ok) throw new Error('Image upload to Cloudinary failed.');
+                    const data = await res.json();
+                    imageUrl = data.secure_url;
+                }
+
+                const medicinesCollectionRef = collection(db, 'medicines');
+                await addDoc(medicinesCollectionRef, {
+                    name: name,
+                    stock: stock,
+                    price: price,
+                    imageUrl: imageUrl,
+                    pharmacyId: currentPharmacyId,
+                    pharmacyName: currentPharmacyName,
+                    pharmacyHours: currentPharmacyHours,
+                    lastUpdated: serverTimestamp()
+                });
+                
+                addMedicineForm.reset();
+                alert('Medicine added successfully!');
+
+            } catch (error) {
+                console.error("Error adding medicine:", error);
+                alert("Failed to add medicine. Please try again.");
+            } finally {
+                addButton.disabled = false;
+                addButton.textContent = 'Add to Inventory';
+            }
+        });
+        
+        function fetchInventory(uid) {
+            const inventoryList = document.getElementById('inventory-list');
+            const medicinesCollectionRef = collection(db, 'medicines');
+            const q = query(medicinesCollectionRef, where("pharmacyId", "==", uid), orderBy('name'));
+
+            onSnapshot(q, (snapshot) => {
+                const loadingEl = document.getElementById('loading-inventory');
+                if (loadingEl) {
+                    loadingEl.style.display = 'none';
+                }
+                
+                if (snapshot.empty) {
+                    inventoryList.innerHTML = `<p class="text-slate-500">Your inventory is empty.</p>`;
+                    return;
+                }
+                inventoryList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const medicine = doc.data();
+                    const medicineEl = document.createElement('div');
+                    medicineEl.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg border';
+                    const placeholderImg = 'https://via.placeholder.com/150/f3f9ff/01579B?text=No+Image';
+
+                    medicineEl.innerHTML = `
+                       <div class="flex items-center space-x-4">
+                            <img src="${medicine.imageUrl || placeholderImg}" alt="${medicine.name}" class="w-16 h-16 object-cover rounded-md bg-gray-200">
+                            <div>
+                                <p class="font-bold">${medicine.name}</p>
+                                <p class="text-sm text-slate-600">Stock: ${medicine.stock} | Price: ₹${medicine.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <div class="space-x-2 flex-shrink-0">
+                            <button class="update-btn text-blue-500 hover:text-blue-700 p-1" data-id="${doc.id}" data-name="${medicine.name}" data-stock="${medicine.stock}" data-price="${medicine.price}"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn text-red-500 hover:text-red-700 p-1" data-id="${doc.id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    inventoryList.appendChild(medicineEl);
+                });
+            });
+        }
+        
+        document.getElementById('inventory-list').addEventListener('click', (e) => {
+            const target = e.target.closest('button');
+            if (!target) return;
+            const medicineId = target.dataset.id;
+            if (target.classList.contains('delete-btn')) {
+                handleDelete(medicineId);
+            }
+            if (target.classList.contains('update-btn')) {
+                const {id, name, stock, price} = target.dataset;
+                handleUpdate(id, name, stock, price);
+            }
+        });
+
+        async function handleDelete(medicineId) {
+            if (confirm("Are you sure you want to delete this medicine?")) {
+                try {
+                    const medicineDocRef = doc(db, 'medicines', medicineId);
+                    await deleteDoc(medicineDocRef);
+                } catch (error) {
+                    console.error("Error deleting medicine:", error);
+                    alert("Failed to delete medicine.");
+                }
+            }
+        }
+        
+        const modal = document.getElementById('update-modal');
+        const updateForm = document.getElementById('update-medicine-form');
+        
+        function handleUpdate(id, name, stock, price) {
+            document.getElementById('updateMedicineId').value = id;
+            document.getElementById('updateMedicineName').value = name;
+            document.getElementById('updateMedicineStock').value = stock;
+            document.getElementById('updateMedicinePrice').value = price;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        document.querySelector('.modal-overlay').addEventListener('click', closeModal);
+        
+        updateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('updateMedicineId').value;
+            const newStock = parseInt(document.getElementById('updateMedicineStock').value);
+            const newPrice = parseFloat(document.getElementById('updateMedicinePrice').value);
+            
+            if (id && !isNaN(newStock) && !isNaN(newPrice)) {
+                try {
+                    const medicineDocRef = doc(db, 'medicines', id);
+                    await updateDoc(medicineDocRef, {
+                        stock: newStock,
+                        price: newPrice,
+                        lastUpdated: serverTimestamp()
+                    });
+                    closeModal();
+                } catch (error) {
+                    console.error("Error updating medicine:", error);
+                    alert("Failed to update medicine.");
+                }
+            }
+        });
+
+        function fetchOrders(uid) {
+            const ordersList = document.getElementById('orders-list');
+            const ordersRef = collection(db, 'orders');
+            const q = query(ordersRef, where("pharmacyId", "==", uid), orderBy("createdAt", "desc"));
+
+            onSnapshot(q, (snapshot) => {
+                const loadingEl = document.getElementById('loading-orders');
+                if (loadingEl) loadingEl.remove();
+
+                if (snapshot.empty) {
+                    ordersList.innerHTML = `<p class="text-slate-500">No new orders at the moment.</p>`;
+                    return;
+                }
+
+                ordersList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    const orderEl = document.createElement('div');
+                    orderEl.className = 'p-3 bg-gray-50 rounded-lg border';
+                    orderEl.innerHTML = `
+                        <p class="font-bold">${order.medicineName} (x${order.quantity})</p>
+                        <p class="text-sm text-slate-600">To: ${order.patientName}</p>
+                        <p class="text-sm text-slate-600">${order.patientAddress}</p>
+                        <p class="text-sm font-semibold">Total: ₹${order.totalPrice.toFixed(2)}</p>
+                        <div class="mt-2">
+                            <select class="status-select w-full border-gray-300 rounded-md text-sm p-1" data-order-id="${doc.id}">
+                                <option value="Pending" ${order.orderStatus === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Accepted" ${order.orderStatus === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="Completed" ${order.orderStatus === 'Completed' ? 'selected' : ''}>Completed</option>
+                                <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </div>
+                    `;
+                    ordersList.appendChild(orderEl);
+                });
+            });
+        }
+        
+        document.getElementById('orders-list').addEventListener('change', async e => {
+            if (e.target.classList.contains('status-select')) {
+                const orderId = e.target.dataset.orderId;
+                const newStatus = e.target.value;
+                const orderRef = doc(db, 'orders', orderId);
+                try {
+                    await updateDoc(orderRef, { orderStatus: newStatus });
+                } catch (error) {
+                    console.error("Failed to update order status:", error);
+                    alert("Could not update status. Please try again.");
+                }
+            }
+        });
+    </script>
+</body>
+</html>
